@@ -7,14 +7,20 @@ class Game extends React.Component {
   constructor() {
     super()
     this.state = {
+      images: []
     }
+  }
+  componentDidMount(){
+    axios.get('/api/images/')
+      .then(res => this.setState({ images: res.data}))
   }
 
   render() {
-
+    if (!this.state.images) return 'Loading...'
+    console.log(this.state.images)
     return (
-      <section className="section">
-        <h1>Hello</h1>
+      <section className="section gamefield">
+
       </section>
     )
   }
