@@ -25,7 +25,7 @@ class Command(BaseCommand):
             image_details = {}
             image_details['user'] = admin_user.pk
             image_details['url'] = url
-            image_details['name'] = name
+            image_details['name'] = name[:-4]
             print()
 
             image_serializer = ImageDeserializer(data=image_details)
