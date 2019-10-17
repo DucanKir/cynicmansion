@@ -19,8 +19,7 @@ class Command(BaseCommand):
 
         for image in my_bucket.objects.all():
 
-            params = {'Bucket': 'cynic.game.images', 'Key': image.key}
-            url = s3_client.generate_presigned_url('get_object', params)
+            url = "https://s3.eu-west-2.amazonaws.com/cynic.game.images/%s" % (image.key)
             name = image.key
             image_details = {}
             image_details['user'] = admin_user.pk

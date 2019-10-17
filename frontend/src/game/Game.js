@@ -24,11 +24,15 @@ class Game extends React.Component {
       masks: [],
       mouths: [],
       scars: [],
-      empty: []
+      empty: [],
+      showDropdown: false,
+      dropdownBtnText: 'Морда лица'
     }
     this.sortImages = this.sortImages.bind(this)
     this.previousBackground = this.previousBackground.bind(this)
     this.nextBackground = this.nextBackground.bind(this)
+    this.toggleDropdown = this.toggleDropdown.bind(this)
+    this.switchControlPanelTab = this.switchControlPanelTab.bind(this)
   }
 
   sortImages(imgs, pattern){
@@ -83,14 +87,66 @@ class Game extends React.Component {
       }))
   }
 
-  render() {
+  toggleDropdown() {
+    this.setState({ showDropdown: !this.state.showDropdown })
+  }
+
+  switchControlPanelTab(e) {
+    console.log(e.target.name)
+    this.setState({
+      dropdownBtnText: e.target.name,
+      showDropdown: false
+    })
+  }
+
+  
+
+  render(){
     if (!this.state.backgrounds[0]) return 'Loading...'
     console.log(this.state)
     return (
-      <section className="section container gamefield" style={{backgroundImage: `url(${this.state.backgrounds[this.state.backgrCount].url})`}}>
-        <button onClick={this.previousBackground}>previous</button>
-        <button onClick={this.nextBackground}>next</button>
-      </section>
+      <div className="gamefield" style={{backgroundImage: `url(${this.state.backgrounds[this.state.backgrCount].url})`}}>
+        <div>
+          <button onClick={this.previousBackground}>previous</button>
+          <button onClick={this.nextBackground}>next</button>
+        </div>
+        <div  className="controlPanel">
+          <div>
+            <div className="dropdown">
+              <button onClick={this.toggleDropdown} className="dropbtn">{this.state.dropdownBtnText}</button>
+              <div id="myDropdown" className={` ${this.state.showDropdown ? 'openDropdown' : 'hideDropdown'}`}>
+                <a href="#"
+                  onClick={this.switchControlPanelTab}
+                  name='Морда лица'
+                >Морда лица</a>
+                <a href="#"
+                  onClick={this.switchControlPanelTab}
+                  name='Конечности'
+                >Конечности</a>
+                <a href="#"
+                  onClick={this.switchControlPanelTab}
+                  name='Шмот'
+                >Шмот</a>
+                <a href="#"
+                  onClick={this.switchControlPanelTab}
+                  name='Волосы'
+                >Волосы</a>
+                <a href="#"
+                  onClick={this.switchControlPanelTab}
+                  name='Всякое'
+                >Всякое</a>
+              </div>
+            </div>
+          </div>
+          <div className='tab'>
+            <div className={` ${this.state.dropdownBtnText === 'Морда лица' ? 'showTab' : 'hideTab'}`}>1</div>
+            <div className={` ${this.state.dropdownBtnText === 'Конечности' ? 'showTab' : 'hideTab'}`}>2</div>
+            <div className={` ${this.state.dropdownBtnText === 'Шмот' ? 'showTab' : 'hideTab'}`}>3</div>
+            <div className={` ${this.state.dropdownBtnText === 'Волосы' ? 'showTab' : 'hideTab'}`}>4</div>
+            <div className={` ${this.state.dropdownBtnText === 'Всякое' ? 'showTab' : 'hideTab'}`}>5</div>
+          </div>
+        </div>
+      </div>
     )
   }
 }
