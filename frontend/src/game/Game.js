@@ -153,6 +153,9 @@ class Game extends React.Component {
           </div>
           <div className='tab'>
             <div className={` ${this.state.dropdownBtnText === 'Морда лица' ? 'showTab' : 'hideTab'}`}>
+              <button className="extradropbtn">Глаза</button>
+              <button className="extradropbtn">Рот</button>
+              <button className="extradropbtn">Брови</button>
               {this.setBodyPartButtons()}
             </div>
             <div className={` ${this.state.dropdownBtnText === 'Конечности' ? 'showTab' : 'hideTab'}`}>2</div>
