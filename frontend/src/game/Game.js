@@ -33,6 +33,7 @@ class Game extends React.Component {
     this.nextBackground = this.nextBackground.bind(this)
     this.toggleDropdown = this.toggleDropdown.bind(this)
     this.switchControlPanelTab = this.switchControlPanelTab.bind(this)
+    this.setBodyPartButtons = this.setBodyPartButtons.bind(this)
   }
 
   sortImages(imgs, pattern){
@@ -99,7 +100,19 @@ class Game extends React.Component {
     })
   }
 
-  
+  setBodyPartButtons() {
+    const images = this.state.eyes
+    images.sort()
+    return(
+      <div className='buttonsContainer'>
+        {images.map(image =>
+          <div key={image.id} style={{backgroundImage: `url(${image.url})`}} className='bodyPartButton'>
+
+          </div>
+        )}
+      </div>
+    )
+  }
 
   render(){
     if (!this.state.backgrounds[0]) return 'Loading...'
@@ -139,7 +152,9 @@ class Game extends React.Component {
             </div>
           </div>
           <div className='tab'>
-            <div className={` ${this.state.dropdownBtnText === 'Морда лица' ? 'showTab' : 'hideTab'}`}>1</div>
+            <div className={` ${this.state.dropdownBtnText === 'Морда лица' ? 'showTab' : 'hideTab'}`}>
+              {this.setBodyPartButtons()}
+            </div>
             <div className={` ${this.state.dropdownBtnText === 'Конечности' ? 'showTab' : 'hideTab'}`}>2</div>
             <div className={` ${this.state.dropdownBtnText === 'Шмот' ? 'showTab' : 'hideTab'}`}>3</div>
             <div className={` ${this.state.dropdownBtnText === 'Волосы' ? 'showTab' : 'hideTab'}`}>4</div>
