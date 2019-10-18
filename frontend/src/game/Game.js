@@ -27,7 +27,8 @@ class Game extends React.Component {
       empty: [],
       showDropdown: false,
       dropdownBtnText: 'Морда лица',
-      faceButtonsText: 'Глаза'
+      faceButtonsText: 'Глаза',
+      formData: {}
     }
     this.sortImages = this.sortImages.bind(this)
     this.previousBackground = this.previousBackground.bind(this)
@@ -42,6 +43,12 @@ class Game extends React.Component {
     this.setLegsButtons = this.setLegsButtons.bind(this)
     this.setBoobsButtons = this.setBoobsButtons.bind(this)
     this.setClothesButtons = this.setClothesButtons.bind(this)
+    this.setHairButtons = this.setHairButtons.bind(this)
+    this.setBeardButtons = this.setBeardButtons.bind(this)
+    this.setGlassesButtons = this.setGlassesButtons.bind(this)
+    this.setHatsButtons = this.setHatsButtons.bind(this)
+    this.setMasksButtons = this.setMasksButtons.bind(this)
+    this.handleChange = this.handleChange.bind(this)
   }
 
   sortImages(imgs, pattern){
@@ -204,6 +211,78 @@ class Game extends React.Component {
     )
   }
 
+  setHairButtons() {
+    const images = this.state.hair
+    return(
+      <div className='buttonsContainer'>
+        {images.map(image =>
+          <div key={image.id} style={{backgroundImage: `url(${image.url}), url(https://s3.eu-west-2.amazonaws.com/cynic.game.images/Head1.png)`}} className='hairButton'>
+
+          </div>
+        )}
+      </div>
+    )
+  }
+
+  setBeardButtons() {
+    const images = this.state.beards
+    return(
+      <div className='buttonsContainer'>
+        {images.map(image =>
+          <div key={image.id} style={{backgroundImage: `url(${image.url}), url(https://s3.eu-west-2.amazonaws.com/cynic.game.images/Head1.png)`}} className='hairButton'>
+
+          </div>
+        )}
+      </div>
+    )
+  }
+  setGlassesButtons() {
+    const images = this.state.glasses
+    return(
+      <div className='buttonsContainer'>
+        {images.map(image =>
+          <div key={image.id} style={{backgroundImage: `url(${image.url}), url(https://s3.eu-west-2.amazonaws.com/cynic.game.images/Head1.png)`}} className='hairButton'>
+
+          </div>
+        )}
+      </div>
+    )
+  }
+
+  setHatsButtons() {
+    const images = this.state.hats
+    return(
+      <div className='buttonsContainer'>
+        {images.map(image =>
+          <div key={image.id} style={{backgroundImage: `url(${image.url}), url(https://s3.eu-west-2.amazonaws.com/cynic.game.images/Head1.png)`}} className='hairButton'>
+
+          </div>
+        )}
+      </div>
+    )
+  }
+  setMasksButtons() {
+    const images = this.state.masks
+    console.log(images)
+    return(
+      <div className='buttonsContainer'>
+        {images.map(image =>
+          <div key={image.id} style={{backgroundImage: `url(${image.url}), url(https://s3.eu-west-2.amazonaws.com/cynic.game.images/Head1.png)`}} className='hairButton'>
+
+          </div>
+        )}
+        <div style={{backgroundImage: `url(${this.state.scars[0].url}), url(https://s3.eu-west-2.amazonaws.com/cynic.game.images/Head1.png)`}} className='hairButton'>
+
+        </div>
+      </div>
+    )
+  }
+
+  handleChange(e) {
+    const formData = { ...this.state.formData, [e.target.name]: e.target.value }
+    this.setState({ formData })
+  }
+
   render(){
     if (!this.state.backgrounds[0]) return 'Loading...'
     console.log(this.state)
@@ -213,6 +292,49 @@ class Game extends React.Component {
           <button onClick={this.previousBackground}>previous</button>
           <button onClick={this.nextBackground}>next</button>
         </div>
+        <div className='clothes'>
+
+        </div>
+        <div className='legs'>
+
+        </div>
+        <div className='hands'>
+
+        </div>
+        <div className='head'>
+
+        </div>
+        <div className='hair'>
+
+        </div>
+        <div className='eyes'>
+
+        </div>
+        <div className='mouth'>
+
+        </div>
+        <div className='brows'>
+
+        </div>
+        <div className='hatOrMasc'>
+
+        </div>
+        <div className='beard'>
+
+        </div>
+        <div className='boobs'>
+
+        </div>
+        <div className='glasses'>
+
+        </div>
+        <div className='pointer'>
+
+        </div>
+        <div className='characterText'>
+          {this.state.formData.text}
+        </div>
+        <input ref="field" onChange={this.handleChange} name='text' className="input is-small input-width" type="text" placeholder="Реплика персонажа" />
         <div  className="controlPanel">
           <div>
             <div className="dropdown">
@@ -278,8 +400,15 @@ class Game extends React.Component {
             <div className={` ${this.state.dropdownBtnText === 'Шмот' ? 'showTab' : 'hideTab'}`}>
               {this.setClothesButtons()}
             </div>
-            <div className={` ${this.state.dropdownBtnText === 'Волосы' ? 'showTab' : 'hideTab'}`}>4</div>
-            <div className={` ${this.state.dropdownBtnText === 'Всякое' ? 'showTab' : 'hideTab'}`}>5</div>
+            <div className={` ${this.state.dropdownBtnText === 'Волосы' ? 'showTab' : 'hideTab'}`}>
+              {this.setHairButtons()}
+            </div>
+            <div className={` ${this.state.dropdownBtnText === 'Всякое' ? 'showTab' : 'hideTab'}`}>
+              {this.setBeardButtons()}
+              {this.setGlassesButtons()}
+              {this.setHatsButtons()}
+              {this.setMasksButtons()}
+            </div>
           </div>
         </div>
       </div>
