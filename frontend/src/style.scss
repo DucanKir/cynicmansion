@@ -44,7 +44,7 @@
   height: 30px;
   background-color: white;
   border: 0;
-  border-bottom: 5px  solid black;
+  border-bottom: 2px  solid black;
   color: black;
   padding: 0;
   font-size: 16px;
@@ -55,12 +55,17 @@
   height: 30px;
   background-color: white;
   border: 0;
-  border-bottom: 1px  solid black;
+  border-bottom: 2px  solid black;
   color: black;
   padding: 0;
   font-size: 14px;
   cursor: pointer;
 
+}
+
+.extradropbtn:nth-child(2) {
+  border-right: 2px  solid black;
+  border-left: 2px  solid black;
 }
 
 .dropbtn:focus {
@@ -85,7 +90,9 @@
 }
 
 .showTab {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   width: 100%;
   height: 100%;
 
@@ -108,11 +115,72 @@
   padding-top: 8px;
 }
 
-.bodyPartButton {
+.faceBtns {
+  width: 100%;
+}
+
+.eyesButton {
   width: 70px;
   height: 70px;
   background-size: 500%;
-  background-position: -135px -105px;
-  background-color: red;
+  background-position: -123px -97px;
+  background-color: white;
+  border: 3px solid black;
+  margin: 8px;
+}
+
+.browsButton {
+  width: 70px;
+  height: 70px;
+  background-size: 500%;
+  background-position: -123px -85px;
+  background-color: white;
+  border: 3px solid black;
+  margin: 8px;
+}
+
+.mouthButton {
+  width: 70px;
+  height: 70px;
+  background-size: 550%;
+  background-position: -135px -145px;
+  background-color: white;
+  border: 3px solid black;
+  margin: 8px;
+}
+.handsButton {
+  width: 70px;
+  height: 70px;
+  background-size: 190%;
+  background-position: -145px -45px;
+  background-color: white;
+  border: 3px solid black;
+  margin: 8px;
+}
+.legsButton {
+  width: 70px;
+  height: 70px;
+  background-size: 190%;
+  background-position: -145px -80px;
+  background-color: white;
+  border: 3px solid black;
+  margin: 8px;
+}
+.clothesButton {
+  width: 70px;
+  height: 90px;
+  background-size: 170%;
+  background-position: -127px -40px;
+  background-color: white;
+  border: 3px solid black;
+  margin: 8px;
+}
+.boobsButton {
+  width: 70px;
+  height: 70px;
+  background-size: 250%;
+  background-position: -200px -70px;
+  background-color: white;
+  border: 3px solid black;
   margin: 8px;
 }
