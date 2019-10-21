@@ -313,3 +313,14 @@
   background-image: url(https://s3.eu-west-2.amazonaws.com/cynic.game.images/TextPointer.png);
   position: absolute;
 }
+
+.characterText {
+  width: 300px;
+  position: absolute;
+  top: 18%;
+  left: 30%;
+}
+
+.input-width {
+  width: 300px !important;
+}
