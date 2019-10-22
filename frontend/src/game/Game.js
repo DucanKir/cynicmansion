@@ -28,7 +28,21 @@ class Game extends React.Component {
       showDropdown: false,
       dropdownBtnText: 'Морда лица',
       faceButtonsText: 'Глаза',
-      formData: {}
+      formData: {},
+      appliedBeard: '',
+      appliedBoobs: '',
+      appliedBrows: '',
+      appliedClothes: {},
+      appliedEyes: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/Eyes0.png',
+      appliedGlasses: '',
+      appliedHair: '',
+      appliedHands: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/Hands11.png',
+      appliedHats: '',
+      appliedHeads: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/Head1.png',
+      appliedLegs: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/Legs2_0.png',
+      appliedMasks: '',
+      appliedMouths: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/Mouth6.png',
+
     }
     this.sortImages = this.sortImages.bind(this)
     this.previousBackground = this.previousBackground.bind(this)
@@ -49,6 +63,7 @@ class Game extends React.Component {
     this.setHatsButtons = this.setHatsButtons.bind(this)
     this.setMasksButtons = this.setMasksButtons.bind(this)
     this.handleChange = this.handleChange.bind(this)
+    this.applyBodyPart = this.applyBodyPart.bind(this)
   }
 
   sortImages(imgs, pattern){
@@ -125,7 +140,13 @@ class Game extends React.Component {
     return(
       <div className='buttonsContainer'>
         {images.map(image =>
-          <div key={image.id} style={{backgroundImage: `url(${image.url})`}} className='eyesButton'>
+          <div
+          key={image.id}
+          style={{backgroundImage: `url(${image.url})`}}
+          className='eyesButton'
+          id={image.name}
+          onClick={this.applyBodyPart}
+          name='appliedEyes'>
 
           </div>
         )}
@@ -138,7 +159,13 @@ class Game extends React.Component {
     return(
       <div className='buttonsContainer'>
         {images.map(image =>
-          <div key={image.id} style={{backgroundImage: `url(${image.url})`}} className='browsButton'>
+          <div
+          key={image.id}
+          id={image.name}
+          style={{backgroundImage: `url(${image.url})`}}
+          className='browsButton'
+          onClick={this.applyBodyPart}
+          name='appliedBrows'>
 
           </div>
         )}
@@ -151,7 +178,13 @@ class Game extends React.Component {
     return(
       <div className='buttonsContainer'>
         {images.map(image =>
-          <div key={image.id} style={{backgroundImage: `url(${image.url})`}} className='mouthButton'>
+          <div
+          key={image.id}
+          id={image.name}
+          style={{backgroundImage: `url(${image.url})`}}
+          className='mouthButton'
+          onClick={this.applyBodyPart}
+          name='appliedMouths'>
 
           </div>
         )}
@@ -164,7 +197,13 @@ class Game extends React.Component {
     return(
       <div className='buttonsContainer'>
         {images.map(image =>
-          <div key={image.id} style={{backgroundImage: `url(${image.url}), url(https://s3.eu-west-2.amazonaws.com/cynic.game.images/Head1.png), url(https://s3.eu-west-2.amazonaws.com/cynic.game.images/Body.png)`}} className='handsButton'>
+          <div
+          key={image.id}
+          id={image.name}
+          style={{backgroundImage: `url(${image.url}), url(https://s3.eu-west-2.amazonaws.com/cynic.game.images/Head1.png), url(https://s3.eu-west-2.amazonaws.com/cynic.game.images/Body.png)`}}
+          className='handsButton'
+          onClick={this.applyBodyPart}
+          name='appliedHands'>
 
           </div>
         )}
@@ -177,7 +216,13 @@ class Game extends React.Component {
     return(
       <div className='buttonsContainer'>
         {images.map(image =>
-          <div key={image.id} style={{backgroundImage: `url(${image.url}), url(https://s3.eu-west-2.amazonaws.com/cynic.game.images/Head1.png), url(https://s3.eu-west-2.amazonaws.com/cynic.game.images/Body.png)`}} className='legsButton'>
+          <div
+          key={image.id}
+          id={image.name}
+          style={{backgroundImage: `url(${image.url}), url(https://s3.eu-west-2.amazonaws.com/cynic.game.images/Head1.png), url(https://s3.eu-west-2.amazonaws.com/cynic.game.images/Body.png)`}}
+          className='legsButton'
+          onClick={this.applyBodyPart}
+          name='appliedLegs'>
 
           </div>
         )}
@@ -190,7 +235,13 @@ class Game extends React.Component {
     return(
       <div className='buttonsContainer'>
         {images.map(image =>
-          <div key={image.id} style={{backgroundImage: `url(${image.url}), url(https://s3.eu-west-2.amazonaws.com/cynic.game.images/Head1.png), url(https://s3.eu-west-2.amazonaws.com/cynic.game.images/Body.png)`}} className='boobsButton'>
+          <div
+          key={image.id}
+          id={image.name}
+          style={{backgroundImage: `url(${image.url}), url(https://s3.eu-west-2.amazonaws.com/cynic.game.images/Head1.png), url(https://s3.eu-west-2.amazonaws.com/cynic.game.images/Body.png)`}}
+          className='boobsButton'
+          onClick={this.applyBodyPart}
+          name='appliedBoobs'>
 
           </div>
         )}
@@ -203,7 +254,13 @@ class Game extends React.Component {
     return(
       <div className='buttonsContainer'>
         {images.map(image =>
-          <div key={image.id} style={ image.name === 'Clothes_15' || image.name === 'Clothes_36' ||image.name === 'Clothes_37' ||image.name === 'Clothes_38' ||image.name === 'Clothes_39' ||image.name === 'Clothes_40' ||image.name === 'Clothes_41' ||image.name === 'Clothes_42' ||image.name === 'Clothes_43' ||image.name === 'Clothes_44' ||image.name === 'Clothes_78' ? {backgroundImage: `url(https://s3.eu-west-2.amazonaws.com/cynic.game.images/Head1.png), url(${image.url}), url(https://s3.eu-west-2.amazonaws.com/cynic.game.images/Legs2_0.png)`} : {backgroundImage: `url(https://s3.eu-west-2.amazonaws.com/cynic.game.images/Head1.png), url(https://s3.eu-west-2.amazonaws.com/cynic.game.images/Hands1.png), url(${image.url}), url(https://s3.eu-west-2.amazonaws.com/cynic.game.images/Legs2_0.png)`}} className='clothesButton'>
+          <div
+          key={image.id}
+          id={image.name}
+          style={ image.name === 'Clothes_15' || image.name === 'Clothes_36' ||image.name === 'Clothes_37' ||image.name === 'Clothes_38' ||image.name === 'Clothes_39' ||image.name === 'Clothes_40' ||image.name === 'Clothes_41' ||image.name === 'Clothes_42' ||image.name === 'Clothes_43' ||image.name === 'Clothes_44' ||image.name === 'Clothes_78' ? {backgroundImage: `url(https://s3.eu-west-2.amazonaws.com/cynic.game.images/Head1.png), url(${image.url}), url(https://s3.eu-west-2.amazonaws.com/cynic.game.images/Legs2_0.png)`} : {backgroundImage: `url(https://s3.eu-west-2.amazonaws.com/cynic.game.images/Head1.png), url(https://s3.eu-west-2.amazonaws.com/cynic.game.images/Hands1.png), url(${image.url}), url(https://s3.eu-west-2.amazonaws.com/cynic.game.images/Legs2_0.png)`}}
+          className='clothesButton'
+          onClick={this.applyBodyPart}
+          name='appliedClothes'>
 
           </div>
         )}
@@ -216,7 +273,13 @@ class Game extends React.Component {
     return(
       <div className='buttonsContainer'>
         {images.map(image =>
-          <div key={image.id} style={{backgroundImage: `url(${image.url}), url(https://s3.eu-west-2.amazonaws.com/cynic.game.images/Head1.png)`}} className='hairButton'>
+          <div
+          key={image.id}
+          id={image.name}
+          style={{backgroundImage: `url(${image.url}), url(https://s3.eu-west-2.amazonaws.com/cynic.game.images/Head1.png)`}}
+          className='hairButton'
+          onClick={this.applyBodyPart}
+          name='appliedHair'>
 
           </div>
         )}
@@ -229,7 +292,13 @@ class Game extends React.Component {
     return(
       <div className='buttonsContainer'>
         {images.map(image =>
-          <div key={image.id} style={{backgroundImage: `url(${image.url}), url(https://s3.eu-west-2.amazonaws.com/cynic.game.images/Head1.png)`}} className='hairButton'>
+          <div
+          key={image.id}
+          id={image.name}
+          style={{backgroundImage: `url(${image.url}), url(https://s3.eu-west-2.amazonaws.com/cynic.game.images/Head1.png)`}}
+          className='hairButton'
+          onClick={this.applyBodyPart}
+          name='appliedBeard'>
 
           </div>
         )}
@@ -241,7 +310,13 @@ class Game extends React.Component {
     return(
       <div className='buttonsContainer'>
         {images.map(image =>
-          <div key={image.id} style={{backgroundImage: `url(${image.url}), url(https://s3.eu-west-2.amazonaws.com/cynic.game.images/Head1.png)`}} className='hairButton'>
+          <div
+          key={image.id}
+          id={image.name}
+          style={{backgroundImage: `url(${image.url}), url(https://s3.eu-west-2.amazonaws.com/cynic.game.images/Head1.png)`}}
+          className='hairButton'
+          onClick={this.applyBodyPart}
+          name='appliedGlasses'>
 
           </div>
         )}
@@ -254,7 +329,13 @@ class Game extends React.Component {
     return(
       <div className='buttonsContainer'>
         {images.map(image =>
-          <div key={image.id} style={{backgroundImage: `url(${image.url}), url(https://s3.eu-west-2.amazonaws.com/cynic.game.images/Head1.png)`}} className='hairButton'>
+          <div
+          key={image.id}
+          id={image.name}
+          style={{backgroundImage: `url(${image.url}), url(https://s3.eu-west-2.amazonaws.com/cynic.game.images/Head1.png)`}}
+          className='hairButton'
+          onClick={this.applyBodyPart}
+          name='appliedHats'>
 
           </div>
         )}
@@ -267,11 +348,21 @@ class Game extends React.Component {
     return(
       <div className='buttonsContainer'>
         {images.map(image =>
-          <div key={image.id} style={{backgroundImage: `url(${image.url}), url(https://s3.eu-west-2.amazonaws.com/cynic.game.images/Head1.png)`}} className='hairButton'>
+          <div
+          key={image.id}
+          id={image.name}
+          style={{backgroundImage: `url(${image.url}), url(https://s3.eu-west-2.amazonaws.com/cynic.game.images/Head1.png)`}}
+          className='hairButton'
+          onClick={this.applyBodyPart}
+          name='appliedMasks'>
 
           </div>
         )}
-        <div style={{backgroundImage: `url(${this.state.scars[0].url}), url(https://s3.eu-west-2.amazonaws.com/cynic.game.images/Head1.png)`}} className='hairButton'>
+        <div style={{backgroundImage: `url(${this.state.scars[0].url}), url(https://s3.eu-west-2.amazonaws.com/cynic.game.images/Head1.png)`}}
+        className='hairButton'
+        onClick={this.applyBodyPart}
+        name='appliedMasks'
+        id={this.state.scars[0].url}>
 
         </div>
       </div>
@@ -283,52 +374,79 @@ class Game extends React.Component {
     this.setState({ formData })
   }
 
+  applyBodyPart(e) {
+    const stateName = e.target.getAttribute('name')
+    const imgName = e.target.id
+
+    const returnObj = {}
+    const pattern = imgName.substring(3, 0).toLowerCase()
+    let targetState =''
+
+    Object.keys(this.state).filter (key => {
+      if(key.includes(pattern)) {
+        targetState = key
+      }
+    })
+    console.log(this.state[targetState])
+    this.state[targetState].filter(obj => {
+      if(obj.name == imgName){
+        returnObj[stateName] = obj
+      }
+    })
+
+    this.setState(returnObj)
+
+  }
+
   render(){
     if (!this.state.backgrounds[0]) return 'Loading...'
-    console.log(this.state)
+    console.log()
     return (
       <div className="gamefield" style={{backgroundImage: `url(${this.state.backgrounds[this.state.backgrCount].url})`}}>
         <div>
           <button onClick={this.previousBackground}>previous</button>
           <button onClick={this.nextBackground}>next</button>
         </div>
-        <div className='clothes'>
+        <div className='clothes' style={{backgroundImage: `url(${this.state.appliedClothes.url})`}}>
 
         </div>
-        <div className='legs'>
+        <div className='legs' style={{backgroundImage: `url(${this.state.appliedLegs.url})`}}>
 
         </div>
-        <div className='hands'>
+        <div className='hands' style={{backgroundImage: `url(${this.state.appliedHands.url})`}}>
 
         </div>
-        <div className='head'>
+        <div className='head' style={{backgroundImage: `url(${this.state.appliedHeads})`}}>
 
         </div>
-        <div className='hair'>
+        <div className='hair' style={{backgroundImage: `url(${this.state.appliedHair.url})`}}>
 
         </div>
-        <div className='eyes'>
+        <div className='eyes' style={{backgroundImage: `url(${this.state.appliedEyes.url})`}}>
 
         </div>
-        <div className='mouth'>
+        <div className='mouth' style={{backgroundImage: `url(${this.state.appliedMouths.url})`}}>
 
         </div>
-        <div className='brows'>
+        <div className='brows' style={{backgroundImage: `url(${this.state.appliedBrows.url})`}}>
 
         </div>
-        <div className='hatOrMasc'>
+        <div className='mask' style={{backgroundImage: `url(${this.state.appliedMasks.url})`}}>
 
         </div>
-        <div className='beard'>
+        <div className='hat' style={{backgroundImage: `url(${this.state.appliedHats.url})`}}>
 
         </div>
-        <div className='boobs'>
+        <div className='beard' style={{backgroundImage: `url(${this.state.appliedBeard.url})`}}>
 
         </div>
-        <div className='glasses'>
+        <div className='boobs' style={{backgroundImage: `url(${this.state.appliedBoobs.url})`}}>
 
         </div>
-        <div className='pointer'>
+        <div className='glasses' style={{backgroundImage: `url(${this.state.appliedGlasses.url})`}}>
+
+        </div>
+        <div className={!this.state.formData.text ? "" : 'pointer'}>
 
         </div>
         <div className='characterText'>
