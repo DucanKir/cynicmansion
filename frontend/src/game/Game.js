@@ -47,7 +47,11 @@ class Game extends React.Component {
       leHidden: false,
       eyHidden: false,
       moHidden: false,
-      clZindex: 0
+      clZindex: 0,
+      eySliderValue: 100,
+      moSliderValue: 100,
+      brSliderValue: 100,
+
 
 
 
@@ -72,6 +76,10 @@ class Game extends React.Component {
     this.setMasksButtons = this.setMasksButtons.bind(this)
     this.handleChange = this.handleChange.bind(this)
     this.applyBodyPart = this.applyBodyPart.bind(this)
+    this.handleEyesSliderChange = this.handleEyesSliderChange.bind(this)
+    this.handleMouthSliderChange = this.handleMouthSliderChange.bind(this)
+    this.handleBrowsSliderChange = this.handleBrowsSliderChange.bind(this)
+    this.sortBodyImages = this.sortBodyImages.bind(this)
   }
 
   sortImages(imgs, pattern){
@@ -143,8 +151,16 @@ class Game extends React.Component {
     })
   }
 
+  sortBodyImages(array) {
+    array.sort((a, b) => {
+      return +(a.name.split('_')[1]) - +(b.name.split('_')[1])
+    })
+  }
+
   setEyesButtons() {
-    const images = this.state.eyes
+    let images = this.state.eyes
+    this.sortBodyImages(images)
+
     return(
       <div className='buttonsContainer'>
         {images.map(image =>
@@ -164,6 +180,8 @@ class Game extends React.Component {
 
   setBrowsButtons() {
     const images = this.state.brows
+    this.sortBodyImages(images)
+
     return(
       <div className='buttonsContainer'>
         {images.map(image =>
@@ -183,6 +201,8 @@ class Game extends React.Component {
 
   setMouthButtons() {
     const images = this.state.mouths
+    this.sortBodyImages(images)
+
     return(
       <div className='buttonsContainer'>
         {images.map(image =>
@@ -202,6 +222,8 @@ class Game extends React.Component {
 
   setHandsButtons() {
     const images = this.state.hands
+    this.sortBodyImages(images)
+
     return(
       <div className='buttonsContainer'>
         {images.map(image =>
@@ -221,6 +243,8 @@ class Game extends React.Component {
 
   setLegsButtons() {
     const images = this.state.legs
+    this.sortBodyImages(images)
+
     return(
       <div className='buttonsContainer'>
         {images.map(image =>
@@ -240,6 +264,8 @@ class Game extends React.Component {
 
   setBoobsButtons() {
     const images = this.state.boobs
+    this.sortBodyImages(images)
+
     return(
       <div className='buttonsContainer'>
         {images.map(image =>
@@ -259,6 +285,8 @@ class Game extends React.Component {
 
   setClothesButtons() {
     const images = this.state.clothes
+    this.sortBodyImages(images)
+
     return(
       <div className='buttonsContainer'>
         {images.map(image =>
@@ -278,6 +306,8 @@ class Game extends React.Component {
 
   setHairButtons() {
     const images = this.state.hair
+    this.sortBodyImages(images)
+
     return(
       <div className='buttonsContainer'>
         {images.map(image =>
@@ -297,6 +327,8 @@ class Game extends React.Component {
 
   setBeardButtons() {
     const images = this.state.beards
+    this.sortBodyImages(images)
+
     return(
       <div className='buttonsContainer'>
         {images.map(image =>
@@ -315,6 +347,8 @@ class Game extends React.Component {
   }
   setGlassesButtons() {
     const images = this.state.glasses
+    this.sortBodyImages(images)
+
     return(
       <div className='buttonsContainer'>
         {images.map(image =>
@@ -334,6 +368,8 @@ class Game extends React.Component {
 
   setHatsButtons() {
     const images = this.state.hats
+    this.sortBodyImages(images)
+
     return(
       <div className='buttonsContainer'>
         {images.map(image =>
@@ -352,7 +388,8 @@ class Game extends React.Component {
   }
   setMasksButtons() {
     const images = this.state.masks
-    console.log(images)
+    this.sortBodyImages(images)
+
     return(
       <div className='buttonsContainer'>
         {images.map(image =>
@@ -404,17 +441,30 @@ class Game extends React.Component {
         returnObj[stateName] = obj
       }
     })
-    if (position == 3) {
-      returnObj = {...returnObj, haHidden: true, clZindex: 2, leHidden: false, haHidden: true}
-    } else if (position == 2){
-      returnObj = {...returnObj, haHidden: false, clZindex: 2, leHidden: false, haHidden: false}
-    } else if (position == 4){
-      returnObj = {...returnObj, haHidden: false, clZindex: 1, leHidden: true, haHidden: true}
-    } else {
-      returnObj = {...returnObj, haHidden: false, clZindex: 1, leHidden: false, haHidden: false}
+
+    if (pattern == 'clo'){
+      if (position == 3) {
+        returnObj = {...returnObj, haHidden: true, clZindex: 2, leHidden: false, haHidden: true}
+      } else if (position == 2){
+        returnObj = {...returnObj, haHidden: false, clZindex: 2, leHidden: false, haHidden: false}
+      } else if (position == 4){
+        returnObj = {...returnObj, haHidden: false, clZindex: 1, leHidden: true, haHidden: true}
+      } else {
+        returnObj = {...returnObj, haHidden: false, clZindex: 1, leHidden: false, haHidden: false}
+      }
     }
     this.setState(returnObj)
 
+  }
+
+  handleEyesSliderChange(e) {
+    this.setState({eySliderValue: e.target.value})
+  }
+  handleBrowsSliderChange(e) {
+    this.setState({brSliderValue: e.target.value})
+  }
+  handleMouthSliderChange(e) {
+    this.setState({moSliderValue: e.target.value})
   }
 
   render(){
@@ -444,13 +494,13 @@ class Game extends React.Component {
         <div className='hair' style={{backgroundImage: `url(${this.state.appliedHair.url})`}}>
 
         </div>
-        <div className={!this.state.eyHidden ? 'eyes' : ""} style={{backgroundImage: `url(${this.state.appliedEyes.url})`}}>
+        <div className={!this.state.eyHidden ? 'eyes' : ""} style={{backgroundImage: `url(${this.state.appliedEyes.url})`, top: `${this.state.eySliderValue}px`}}>
 
         </div>
-        <div className={!this.state.moHidden ? 'mouth' : ""} style={{backgroundImage: `url(${this.state.appliedMouths.url})`}}>
+        <div className={!this.state.moHidden ? 'mouth' : ""} style={{backgroundImage: `url(${this.state.appliedMouths.url})`, top: `${this.state.moSliderValue}px`}}>
 
         </div>
-        <div className='brows' style={{backgroundImage: `url(${this.state.appliedBrows.url})`}}>
+        <div className='brows' style={{backgroundImage: `url(${this.state.appliedBrows.url})`, top: `${this.state.brSliderValue}px`}}>
 
         </div>
         <div className='hat' style={{backgroundImage: `url(${this.state.appliedHats.url})`}}>
@@ -514,12 +564,45 @@ class Game extends React.Component {
                   className="extradropbtn" name="Брови">Брови</button>
               </div >
               <div className={` ${this.state.faceButtonsText === 'Глаза' ? 'showTab' : 'hideTab'}`}>
+                <div>
+                  <input
+                  type="range"
+                  min="85"
+                  max="115"
+                  value={this.state.eySliderValue}
+                  class="slider"
+                  id="eyesRange"
+                  step="5"
+                  onChange={this.handleEyesSliderChange} />
+                </div>
                 {this.setEyesButtons()}
               </div>
               <div className={` ${this.state.faceButtonsText === 'Рот' ? 'showTab' : 'hideTab'}`}>
+                <div>
+                  <input
+                  type="range"
+                  min="85"
+                  max="115"
+                  value={this.state.moSliderValue}
+                  class="slider"
+                  id="eyesRange"
+                  step="5"
+                  onChange={this.handleMouthSliderChange} />
+                </div>
                 {this.setMouthButtons()}
               </div>
               <div className={` ${this.state.faceButtonsText === 'Брови' ? 'showTab' : 'hideTab'}`}>
+                <div>
+                  <input
+                  type="range"
+                  min="85"
+                  max="115"
+                  value={this.state.brSliderValue}
+                  class="slider"
+                  id="eyesRange"
+                  step="5"
+                  onChange={this.handleBrowsSliderChange} />
+                </div>
                 {this.setBrowsButtons()}
               </div>
             </div>

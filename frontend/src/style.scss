@@ -198,7 +198,7 @@
 .clothes {
   width: 400px;
   height: 550px;
-  top: 20%;
+  top: 100px;
   left: 10%;
   background-size: 100%;
   background-image: url(https://s3.eu-west-2.amazonaws.com/cynic.game.images/Clothes_12.png);
@@ -207,7 +207,7 @@
 .legs {
   width: 400px;
   height: 550px;
-  top: 20%;
+  top: 100px;
   left: 10%;
   background-size: 100%;
   background-image: url(https://s3.eu-west-2.amazonaws.com/cynic.game.images/Legs1_0.png);
@@ -217,7 +217,7 @@
 .hands {
   width: 400px;
   height: 550px;
-  top: 20%;
+  top: 100px;
   left: 10%;
   background-size: 100%;
   background-image: url(https://s3.eu-west-2.amazonaws.com/cynic.game.images/Hands1.png);
@@ -227,7 +227,7 @@
 .head {
   width: 400px;
   height: 550px;
-  top: 20%;
+  top: 100px;
   left: 10%;
   background-size: 100%;
   background-image: url(https://s3.eu-west-2.amazonaws.com/cynic.game.images/Head1.png);
@@ -237,7 +237,7 @@
 .hair {
   width: 400px;
   height: 550px;
-  top: 20%;
+  top: 100px;
   left: 10%;
   background-size: 100%;
   background-image: url(https://s3.eu-west-2.amazonaws.com/cynic.game.images/Head1.png);
@@ -247,16 +247,16 @@
 .eyes {
   width: 400px;
   height: 550px;
-  top: 20%;
   left: 10%;
   background-size: 100%;
   z-index: 4;
   position: absolute;
+  transition: all 0.2s linear;
 }
 .mouth {
   width: 400px;
   height: 550px;
-  top: 20%;
+  top: 100px;
   left: 10%;
   background-size: 100%;
   z-index: 4;
@@ -265,7 +265,7 @@
 .brows {
   width: 400px;
   height: 550px;
-  top: 20%;
+  top: 100px;
   left: 10%;
   background-size: 100%;
   z-index: 4;
@@ -274,7 +274,7 @@
 .hat {
   width: 400px;
   height: 550px;
-  top: 20%;
+  top: 100px;
   left: 10%;
   background-size: 100%;
   z-index: 5;
@@ -283,7 +283,7 @@
 .mask {
   width: 400px;
   height: 550px;
-  top: 20%;
+  top: 100px;
   left: 10%;
   background-size: 100%;
   z-index: 3;
@@ -292,7 +292,7 @@
 .beard {
   width: 400px;
   height: 550px;
-  top: 20%;
+  top: 100px;
   left: 10%;
   background-size: 100%;
   z-index: 3;
@@ -301,7 +301,7 @@
 .boobs {
   width: 400px;
   height: 550px;
-  top: 20%;
+  top: 100px;
   left: 10%;
   background-size: 100%;
   z-index: 5;
@@ -310,7 +310,7 @@
 .glasses {
   width: 400px;
   height: 550px;
-  top: 20%;
+  top: 100px;
   left: 10%;
   background-size: 100%;
   z-index: 5;
