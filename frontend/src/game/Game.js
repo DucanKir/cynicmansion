@@ -59,6 +59,7 @@ class Game extends React.Component {
     this.previousBackground = this.previousBackground.bind(this)
     this.nextBackground = this.nextBackground.bind(this)
     this.toggleDropdown = this.toggleDropdown.bind(this)
+    this.closeDropdown = this.closeDropdown.bind(this)
     this.switchControlPanelTab = this.switchControlPanelTab.bind(this)
     this.switchFaceTab = this.switchFaceTab.bind(this)
     this.setEyesButtons = this.setEyesButtons.bind(this)
@@ -81,6 +82,7 @@ class Game extends React.Component {
     this.handleBodySliderChange = this.handleBodySliderChange.bind(this)
     this.sortBodyImages = this.sortBodyImages.bind(this)
     this.setDefaultBody = this.setDefaultBody.bind(this)
+    this.resetPart = this.resetPart.bind(this)
   }
 
   sortImages(imgs, pattern){
@@ -145,6 +147,10 @@ class Game extends React.Component {
     this.setState({ showDropdown: !this.state.showDropdown })
   }
 
+  closeDropdown() {
+    this.setState({ showDropdown: false })
+  }
+
   switchControlPanelTab(e) {
     this.setState({
       dropdownBtnText: e.target.name,
@@ -191,6 +197,11 @@ class Game extends React.Component {
 
     return(
       <div className='buttonsContainer'>
+        <div
+          className='browsButton'
+          onClick={this.resetPart}
+          id='appliedBrows'>
+        </div>
         {images.map(image =>
           <div
           key={image.id}
@@ -275,6 +286,11 @@ class Game extends React.Component {
 
     return(
       <div className='buttonsContainer'>
+        <div
+          className='boobsButton'
+          onClick={this.resetPart}
+          id='appliedBoobs'>
+        </div>
         {images.map(image =>
           <div
           key={image.id}
@@ -317,6 +333,11 @@ class Game extends React.Component {
 
     return(
       <div className='buttonsContainer'>
+        <div
+          className='hairButton'
+          onClick={this.resetPart}
+          id='appliedHair'>
+        </div>
         {images.map(image =>
           <div
           key={image.id}
@@ -338,6 +359,11 @@ class Game extends React.Component {
 
     return(
       <div className='buttonsContainer'>
+        <div
+          className='hairButton'
+          onClick={this.resetPart}
+          id='appliedBeard'>
+        </div>
         {images.map(image =>
           <div
           key={image.id}
@@ -358,6 +384,11 @@ class Game extends React.Component {
 
     return(
       <div className='buttonsContainer'>
+        <div
+          className='hairButton'
+          onClick={this.resetPart}
+          id='appliedGlasses'>
+        </div>
         {images.map(image =>
           <div
           key={image.id}
@@ -379,6 +410,11 @@ class Game extends React.Component {
 
     return(
       <div className='buttonsContainer'>
+        <div
+          className='hairButton'
+          onClick={this.resetPart}
+          id='appliedHats'>
+        </div>
         {images.map(image =>
           <div
           key={image.id}
@@ -399,6 +435,11 @@ class Game extends React.Component {
 
     return(
       <div className='buttonsContainer'>
+        <div
+          className='hairButton'
+          onClick={this.resetPart}
+          id='appliedMasks'>
+        </div>
         {images.map(image =>
           <div
           key={image.id}
@@ -463,11 +504,12 @@ class Game extends React.Component {
         returnObj = {...returnObj, eyHidden: false, moHidden: false, brHidden: false, heHidden: false}
       }
     }
-
-
-
     this.setState(returnObj)
+  }
 
+  resetPart(e){
+
+    this.setState({[e.target.id]: '', eyHidden: false, moHidden: false, brHidden: false, heHidden: false})
   }
 
   handleEyesSliderChange(e) {
@@ -487,7 +529,10 @@ class Game extends React.Component {
     if (!this.state.backgrounds[0]) return 'Loading...'
     console.log()
     return (
-      <div className="gamefield" style={{backgroundImage: `url(${this.state.backgrounds[this.state.backgrCount].url})`}}>
+      <div className="gamefield" style={{backgroundImage: `url(${this.state.backgrounds[this.state.backgrCount].url})`}}
+      >
+        <div className='back' onClick={this.closeDropdown}>
+        </div>
         <div>
           <button onClick={this.previousBackground}>previous</button>
           <button onClick={this.nextBackground}>next</button>
@@ -568,7 +613,10 @@ class Game extends React.Component {
               </div>
             </div>
           </div>
+
           <div className='tab'>
+            <div className={this.state.showDropdown ? 'openShade' : 'closeShade'} onClick={this.closeDropdown}>
+            </div>
             <div className={this.state.dropdownBtnText === 'Морда лица' ? 'showTab' : 'hideTab'}>
               <div className="faceBtns">
                 <button
@@ -640,6 +688,7 @@ class Game extends React.Component {
                 step="5"
                 onChange={this.handleBodySliderChange} />
               </div>
+              <br />
               <h1>Руки</h1>
               {this.setHandsButtons()}
               <br />
