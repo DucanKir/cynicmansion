@@ -32,30 +32,29 @@ class Game extends React.Component {
       appliedBeard: '',
       appliedBoobs: '',
       appliedBrows: '',
-      appliedClothes: {},
-      appliedEyes: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/Eyes0.png',
+      appliedClothes: {url: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/Body.png'},
+      appliedEyes: {url: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/Eyes0.png'},
       appliedGlasses: '',
       appliedHair: '',
-      appliedHands: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/Hands11.png',
+      appliedHands: {url: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/Hands1.png'},
       appliedHats: '',
       appliedHeads: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/Head1.png',
-      appliedLegs: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/Legs2_0.png',
+      appliedLegs: {url: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/Legs2_0.png'},
       appliedMasks: '',
-      appliedMouths: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/Mouth6.png',
-      headHidden: false,
+      appliedMouths: {url: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/Mouth6.png'},
+      heHidden: false,
       haHidden: false,
       leHidden: false,
       eyHidden: false,
       moHidden: false,
+      brHidden: false,
       clZindex: 0,
-      eySliderValue: 100,
-      moSliderValue: 100,
-      brSliderValue: 100,
-
-
-
-
+      eySliderValue: 0,
+      moSliderValue: 0,
+      brSliderValue: 0,
+      boSliderValue: 400
     }
+
     this.sortImages = this.sortImages.bind(this)
     this.previousBackground = this.previousBackground.bind(this)
     this.nextBackground = this.nextBackground.bind(this)
@@ -79,7 +78,9 @@ class Game extends React.Component {
     this.handleEyesSliderChange = this.handleEyesSliderChange.bind(this)
     this.handleMouthSliderChange = this.handleMouthSliderChange.bind(this)
     this.handleBrowsSliderChange = this.handleBrowsSliderChange.bind(this)
+    this.handleBodySliderChange = this.handleBodySliderChange.bind(this)
     this.sortBodyImages = this.sortBodyImages.bind(this)
+    this.setDefaultBody = this.setDefaultBody.bind(this)
   }
 
   sortImages(imgs, pattern){
@@ -110,6 +111,11 @@ class Game extends React.Component {
     }
   }
 
+  setDefaultBody() {
+    console.log(this.state.hands)
+    this.setState({appliedHands: this.state.hands[0]})
+  }
+
   componentDidMount(){
     axios.get('/api/images/')
       .then(res => this.setState({
@@ -132,6 +138,7 @@ class Game extends React.Component {
         empty: this.sortImages(res.data, 'No')
 
       }))
+
   }
 
   toggleDropdown() {
@@ -403,13 +410,6 @@ class Game extends React.Component {
 
           </div>
         )}
-        <div style={{backgroundImage: `url(${this.state.scars[0].url}), url(https://s3.eu-west-2.amazonaws.com/cynic.game.images/Head1.png)`}}
-        className='hairButton'
-        onClick={this.applyBodyPart}
-        name='appliedMasks'
-        id={this.state.scars[0].url}>
-
-        </div>
       </div>
     )
   }
@@ -452,7 +452,20 @@ class Game extends React.Component {
       } else {
         returnObj = {...returnObj, haHidden: false, clZindex: 1, leHidden: false, haHidden: false}
       }
+    } else if (pattern == 'mas') {
+      if (position == 2) {
+        returnObj = {...returnObj, eyHidden: false, moHidden: true, brHidden: false, heHidden: false}
+      } else if (position == 3) {
+        returnObj = {...returnObj, eyHidden: true, moHidden: true, brHidden: true, heHidden: false}
+      } else if (position == 4) {
+        returnObj = {...returnObj, eyHidden: true, moHidden: true, brHidden: true, heHidden: true}
+      } else {
+        returnObj = {...returnObj, eyHidden: false, moHidden: false, brHidden: false, heHidden: false}
+      }
     }
+
+
+
     this.setState(returnObj)
 
   }
@@ -466,6 +479,9 @@ class Game extends React.Component {
   handleMouthSliderChange(e) {
     this.setState({moSliderValue: e.target.value})
   }
+  handleBodySliderChange(e) {
+    this.setState({boSliderValue: e.target.value, })
+  }
 
   render(){
     if (!this.state.backgrounds[0]) return 'Loading...'
@@ -476,44 +492,46 @@ class Game extends React.Component {
           <button onClick={this.previousBackground}>previous</button>
           <button onClick={this.nextBackground}>next</button>
         </div>
-        <div className='clothes' style={{backgroundImage: `url(${this.state.appliedClothes.url})`, zIndex: this.state.clZindex}}>
+        <div className="bodyContainer">
+          <div className='clothes' style={{backgroundImage: `url(${this.state.appliedClothes.url})`, zIndex: this.state.clZindex, backgroundSize: `${this.state.boSliderValue}px 515px`}}>
 
-        </div>
-        <div className={!this.state.leHidden ? 'legs' : ""} style={{backgroundImage: `url(${this.state.appliedLegs.url})`}}>
+          </div>
+          <div className={!this.state.leHidden ? 'legs' : ""} style={{backgroundImage: `url(${this.state.appliedLegs.url})`, backgroundSize: `${this.state.boSliderValue}px 515px`}}>
 
-        </div>
-        <div className={!this.state.haHidden ? 'hands' : ""} style={{backgroundImage: `url(${this.state.appliedHands.url})`}}>
+          </div>
+          <div className={!this.state.haHidden ? 'hands' : ""} style={{backgroundImage: `url(${this.state.appliedHands.url})`, backgroundSize: `${this.state.boSliderValue}px 515px`}}>
 
-        </div>
-        <div className={!this.state.headHidden ? 'head' : ""} style={{backgroundImage: `url(${this.state.appliedHeads})`}}>
+          </div>
+          <div className={!this.state.heHidden ? 'head' : ""} style={{backgroundImage: `url(${this.state.appliedHeads})`}}>
 
-        </div>
-        <div className='mask' style={{backgroundImage: `url(${this.state.appliedMasks.url})`}}>
+          </div>
+          <div className='mask' style={{backgroundImage: `url(${this.state.appliedMasks.url})`}}>
 
-        </div>
-        <div className='hair' style={{backgroundImage: `url(${this.state.appliedHair.url})`}}>
+          </div>
+          <div className='hair' style={{backgroundImage: `url(${this.state.appliedHair.url})`}}>
 
-        </div>
-        <div className={!this.state.eyHidden ? 'eyes' : ""} style={{backgroundImage: `url(${this.state.appliedEyes.url})`, top: `${this.state.eySliderValue}px`}}>
+          </div>
+          <div className={!this.state.eyHidden ? 'eyes' : ""} style={{backgroundImage: `url(${this.state.appliedEyes.url})`, top: `${this.state.eySliderValue}px`}}>
 
-        </div>
-        <div className={!this.state.moHidden ? 'mouth' : ""} style={{backgroundImage: `url(${this.state.appliedMouths.url})`, top: `${this.state.moSliderValue}px`}}>
+          </div>
+          <div className={!this.state.moHidden ? 'mouth' : ""} style={{backgroundImage: `url(${this.state.appliedMouths.url})`, top: `${this.state.moSliderValue}px`}}>
 
-        </div>
-        <div className='brows' style={{backgroundImage: `url(${this.state.appliedBrows.url})`, top: `${this.state.brSliderValue}px`}}>
+          </div>
+          <div className='brows' style={{backgroundImage: `url(${this.state.appliedBrows.url})`, top: `${this.state.brSliderValue}px`}}>
 
-        </div>
-        <div className='hat' style={{backgroundImage: `url(${this.state.appliedHats.url})`}}>
+          </div>
+          <div className='hat' style={{backgroundImage: `url(${this.state.appliedHats.url})`}}>
 
-        </div>
-        <div className='beard' style={{backgroundImage: `url(${this.state.appliedBeard.url})`}}>
+          </div>
+          <div className='beard' style={{backgroundImage: `url(${this.state.appliedBeard.url})`}}>
 
-        </div>
-        <div className='boobs' style={{backgroundImage: `url(${this.state.appliedBoobs.url})`}}>
+          </div>
+          <div className='boobs' style={{backgroundImage: `url(${this.state.appliedBoobs.url})`}}>
 
-        </div>
-        <div className='glasses' style={{backgroundImage: `url(${this.state.appliedGlasses.url})`}}>
+          </div>
+          <div className='glasses' style={{backgroundImage: `url(${this.state.appliedGlasses.url})`}}>
 
+          </div>
         </div>
         <div className={!this.state.formData.text ? "" : 'pointer'}>
 
@@ -551,40 +569,42 @@ class Game extends React.Component {
             </div>
           </div>
           <div className='tab'>
-            <div className={` ${this.state.dropdownBtnText === 'Морда лица' ? 'showTab' : 'hideTab'}`}>
+            <div className={this.state.dropdownBtnText === 'Морда лица' ? 'showTab' : 'hideTab'}>
               <div className="faceBtns">
                 <button
                   onClick={this.switchFaceTab}
-                  className="extradropbtn" name="Глаза">Глаза</button>
+                  className={this.state.faceButtonsText === 'Глаза' ? "extradropbtnActive" : "extradropbtn"} name="Глаза">Глаза</button>
                 <button
                   onClick={this.switchFaceTab}
-                  className="extradropbtn" name="Рот">Рот</button>
+                  className={this.state.faceButtonsText === 'Рот' ? "extradropbtnActive" : "extradropbtn"} name="Рот">Рот</button>
                 <button
                   onClick={this.switchFaceTab}
-                  className="extradropbtn" name="Брови">Брови</button>
+                  className={this.state.faceButtonsText === 'Брови' ? "extradropbtnActive" : "extradropbtn"} name="Брови">Брови</button>
               </div >
-              <div className={` ${this.state.faceButtonsText === 'Глаза' ? 'showTab' : 'hideTab'}`}>
-                <div>
+              <div className={this.state.faceButtonsText === 'Глаза' ? 'showTab' : 'hideTab'}>
+                <div className="sliderContainer">
+                  <h1>Положение глаз</h1>
                   <input
                   type="range"
-                  min="85"
-                  max="115"
+                  min="-15"
+                  max="15"
+                  className="slider"
                   value={this.state.eySliderValue}
-                  class="slider"
                   id="eyesRange"
                   step="5"
                   onChange={this.handleEyesSliderChange} />
                 </div>
                 {this.setEyesButtons()}
               </div>
-              <div className={` ${this.state.faceButtonsText === 'Рот' ? 'showTab' : 'hideTab'}`}>
-                <div>
+              <div className={this.state.faceButtonsText === 'Рот' ? 'showTab' : 'hideTab'}>
+                <div className="sliderContainer">
+                  <h1>Положение рта</h1>
                   <input
                   type="range"
-                  min="85"
-                  max="115"
+                  min="-15"
+                  max="15"
+                  className="slider"
                   value={this.state.moSliderValue}
-                  class="slider"
                   id="eyesRange"
                   step="5"
                   onChange={this.handleMouthSliderChange} />
@@ -592,13 +612,14 @@ class Game extends React.Component {
                 {this.setMouthButtons()}
               </div>
               <div className={` ${this.state.faceButtonsText === 'Брови' ? 'showTab' : 'hideTab'}`}>
-                <div>
+                <div className="sliderContainer">
+                  <h1>Положение бровей</h1>
                   <input
                   type="range"
-                  min="85"
-                  max="115"
+                  min="-15"
+                  max="15"
+                  className="slider"
                   value={this.state.brSliderValue}
-                  class="slider"
                   id="eyesRange"
                   step="5"
                   onChange={this.handleBrowsSliderChange} />
@@ -607,6 +628,18 @@ class Game extends React.Component {
               </div>
             </div>
             <div className={` ${this.state.dropdownBtnText === 'Конечности' ? 'showTab' : 'hideTab'}`}>
+              <div className="sliderContainer">
+                <h1>Размер тушки</h1>
+                <input
+                type="range"
+                min="350"
+                max="450"
+                className="slider"
+                value={this.state.boSliderValue}
+                id="eyesRange"
+                step="5"
+                onChange={this.handleBodySliderChange} />
+              </div>
               <h1>Руки</h1>
               {this.setHandsButtons()}
               <br />

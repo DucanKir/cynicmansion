@@ -50,6 +50,10 @@
   font-size: 16px;
   cursor: pointer;
 }
+
+.dropbtn:hover {
+  background-color: #d3d3d366;
+}
 .extradropbtn {
   width: calc(100%/3);
   height: 30px;
@@ -68,10 +72,33 @@
   border-left: 2px  solid black;
 }
 
+.extradropbtnActive:nth-child(2) {
+  border-right: 2px  solid black;
+  border-left: 2px  solid black;
+}
+
 .dropbtn:focus {
   outline:none;
 }
 .extradropbtn:focus {
+  outline:none;
+}
+
+.extradropbtn:hover {
+  background-color: #d3d3d366;
+}
+.extradropbtnActive {
+  background-color: lightgrey;
+  width: calc(100%/3);
+  height: 30px;
+  border: 0;
+  border-bottom: 2px  solid black;
+  color: black;
+  padding: 0;
+  font-size: 14px;
+  cursor: pointer;
+}
+.extradropbtnActive:focus {
   outline:none;
 }
 
@@ -127,6 +154,7 @@
   background-color: white;
   border: 3px solid black;
   margin: 8px;
+  cursor: pointer;
 }
 
 .browsButton {
@@ -137,6 +165,7 @@
   background-color: white;
   border: 3px solid black;
   margin: 8px;
+  cursor: pointer;
 }
 
 .mouthButton {
@@ -147,6 +176,7 @@
   background-color: white;
   border: 3px solid black;
   margin: 8px;
+  cursor: pointer;
 }
 .handsButton {
   width: 70px;
@@ -156,6 +186,7 @@
   background-color: white;
   border: 3px solid black;
   margin: 8px;
+  cursor: pointer;
 }
 .legsButton {
   width: 70px;
@@ -165,6 +196,7 @@
   background-color: white;
   border: 3px solid black;
   margin: 8px;
+  cursor: pointer;
 }
 .clothesButton {
   width: 70px;
@@ -174,6 +206,7 @@
   background-color: white;
   border: 3px solid black;
   margin: 8px;
+  cursor: pointer;
 }
 .boobsButton {
   width: 70px;
@@ -183,6 +216,7 @@
   background-color: white;
   border: 3px solid black;
   margin: 8px;
+  cursor: pointer;
 }
 
 .hairButton {
@@ -193,128 +227,154 @@
   background-color: white;
   border: 3px solid black;
   margin: 8px;
+  cursor: pointer;
+}
+
+.bodyContainer{
+
+  width: 400px;
+  height: 550px;
+  top: 70px;
+  left: 100px;
+  position: relative;
 }
 
 .clothes {
-  width: 400px;
-  height: 550px;
-  top: 100px;
-  left: 10%;
-  background-size: 100%;
+  width: 100%;
+  height: 100%;
+  background-size: 400px 515px;
   background-image: url(https://s3.eu-west-2.amazonaws.com/cynic.game.images/Clothes_12.png);
   position: absolute;
+  top: 0;
+  left: 0;
+  background-position: center;
 }
 .legs {
-  width: 400px;
-  height: 550px;
-  top: 100px;
-  left: 10%;
-  background-size: 100%;
+  width: 100%;
+  height: 100%;
+  background-size: 400px 515px;
   background-image: url(https://s3.eu-west-2.amazonaws.com/cynic.game.images/Legs1_0.png);
   position: absolute;
+  top: 0;
+  left: 0;
   z-index: 1;
+  background-position: center;
 }
 .hands {
-  width: 400px;
-  height: 550px;
-  top: 100px;
-  left: 10%;
-  background-size: 100%;
+  width: 100%;
+  height: 100%;
+  background-size: 400px 515px;
   background-image: url(https://s3.eu-west-2.amazonaws.com/cynic.game.images/Hands1.png);
   position: absolute;
+  top: 0;
+  left: 0;
   z-index: 2;
+  background-position: center;
 }
 .head {
-  width: 400px;
-  height: 550px;
-  top: 100px;
-  left: 10%;
-  background-size: 100%;
+  width: 100%;
+  height: 100%;
+  background-size: 400px 515px;
   background-image: url(https://s3.eu-west-2.amazonaws.com/cynic.game.images/Head1.png);
   position: absolute;
+  top: 0;
+  left: 0;
   z-index: 3;
+  background-position: center;
 }
 .hair {
-  width: 400px;
-  height: 550px;
-  top: 100px;
-  left: 10%;
-  background-size: 100%;
+  width: 100%;
+  height: 100%;
+  background-size: 400px 515px;
   background-image: url(https://s3.eu-west-2.amazonaws.com/cynic.game.images/Head1.png);
   position: absolute;
+  top: 0;
+  left: 0;
   z-index: 4;
+  background-position: center;
 }
 .eyes {
-  width: 400px;
-  height: 550px;
-  left: 10%;
-  background-size: 100%;
+  width: 100%;
+  height: 100%;
+  background-size: 400px 515px;
   z-index: 4;
   position: absolute;
+  top: 0;
+  left: 0;
   transition: all 0.2s linear;
+  background-position: center;
 }
 .mouth {
-  width: 400px;
-  height: 550px;
-  top: 100px;
-  left: 10%;
-  background-size: 100%;
+  width: 100%;
+  height: 100%;
+  background-size: 400px 515px;
   z-index: 4;
   position: absolute;
+  top: 0;
+  left: 0;
+  transition: all 0.2s linear;
+  background-position: center;
 }
 .brows {
-  width: 400px;
-  height: 550px;
-  top: 100px;
-  left: 10%;
-  background-size: 100%;
+  width: 100%;
+  height: 100%;
+  background-size: 400px 515px;
   z-index: 4;
   position: absolute;
+  top: 0;
+  left: 0;
+  transition: all 0.2s linear;
+  background-position: center;
 }
 .hat {
-  width: 400px;
-  height: 550px;
-  top: 100px;
-  left: 10%;
-  background-size: 100%;
+  width: 100%;
+  height: 100%;
+  background-size: 400px 515px;
   z-index: 5;
   position: absolute;
+  top: 0;
+  left: 0;
+  background-position: center;
 }
 .mask {
-  width: 400px;
-  height: 550px;
-  top: 100px;
-  left: 10%;
-  background-size: 100%;
+  width: 100%;
+  height: 100%;
+  background-size: 400px 515px;
   z-index: 3;
   position: absolute;
+  top: 0;
+  left: 0;
+  background-position: center;
 }
 .beard {
-  width: 400px;
-  height: 550px;
-  top: 100px;
-  left: 10%;
-  background-size: 100%;
+  width: 100%;
+  height: 100%;
+  background-size: 400px 515px;
   z-index: 3;
   position: absolute;
+  top: 0;
+  left: 0;
+  background-position: center;
 }
 .boobs {
-  width: 400px;
-  height: 550px;
-  top: 100px;
-  left: 10%;
-  background-size: 100%;
+  width: 100%;
+  height: 100%;
+  background-size: 400px 515px;
   z-index: 5;
   position: absolute;
+  top: 0;
+  left: 0;
+  background-position: center;
 }
 .glasses {
-  width: 400px;
-  height: 550px;
-  top: 100px;
-  left: 10%;
-  background-size: 100%;
+  width: 100%;
+  height: 100%;
+  background-size: 400px 515px;
   z-index: 5;
   position: absolute;
+  top: 0;
+  left: 0;
+  background-position: center;
 }
 .pointer {
   width: 70px;
@@ -336,4 +396,15 @@
 
 .input-width {
   width: 300px !important;
+}
+.sliderContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.slider {
+  width: 95%;
+  cursor: pointer;
 }
