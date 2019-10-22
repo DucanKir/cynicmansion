@@ -212,6 +212,7 @@
   background-size: 100%;
   background-image: url(https://s3.eu-west-2.amazonaws.com/cynic.game.images/Legs1_0.png);
   position: absolute;
+  z-index: 1;
 }
 .hands {
   width: 400px;
@@ -221,6 +222,7 @@
   background-size: 100%;
   background-image: url(https://s3.eu-west-2.amazonaws.com/cynic.game.images/Hands1.png);
   position: absolute;
+  z-index: 2;
 }
 .head {
   width: 400px;
@@ -230,6 +232,7 @@
   background-size: 100%;
   background-image: url(https://s3.eu-west-2.amazonaws.com/cynic.game.images/Head1.png);
   position: absolute;
+  z-index: 3;
 }
 .hair {
   width: 400px;
@@ -239,6 +242,7 @@
   background-size: 100%;
   background-image: url(https://s3.eu-west-2.amazonaws.com/cynic.game.images/Head1.png);
   position: absolute;
+  z-index: 4;
 }
 .eyes {
   width: 400px;
@@ -246,7 +250,7 @@
   top: 20%;
   left: 10%;
   background-size: 100%;
-
+  z-index: 4;
   position: absolute;
 }
 .mouth {
@@ -255,7 +259,7 @@
   top: 20%;
   left: 10%;
   background-size: 100%;
-
+  z-index: 4;
   position: absolute;
 }
 .brows {
@@ -264,7 +268,7 @@
   top: 20%;
   left: 10%;
   background-size: 100%;
-
+  z-index: 4;
   position: absolute;
 }
 .hat {
@@ -273,7 +277,7 @@
   top: 20%;
   left: 10%;
   background-size: 100%;
-
+  z-index: 5;
   position: absolute;
 }
 .mask {
@@ -282,7 +286,7 @@
   top: 20%;
   left: 10%;
   background-size: 100%;
-
+  z-index: 3;
   position: absolute;
 }
 .beard {
@@ -291,7 +295,7 @@
   top: 20%;
   left: 10%;
   background-size: 100%;
-
+  z-index: 3;
   position: absolute;
 }
 .boobs {
@@ -300,7 +304,7 @@
   top: 20%;
   left: 10%;
   background-size: 100%;
-
+  z-index: 5;
   position: absolute;
 }
 .glasses {
@@ -309,7 +313,7 @@
   top: 20%;
   left: 10%;
   background-size: 100%;
-
+  z-index: 5;
   position: absolute;
 }
 .pointer {

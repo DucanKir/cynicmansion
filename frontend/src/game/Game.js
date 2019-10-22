@@ -42,6 +42,14 @@ class Game extends React.Component {
       appliedLegs: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/Legs2_0.png',
       appliedMasks: '',
       appliedMouths: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/Mouth6.png',
+      headHidden: false,
+      haHidden: false,
+      leHidden: false,
+      eyHidden: false,
+      moHidden: false,
+      clZindex: 0
+
+
 
     }
     this.sortImages = this.sortImages.bind(this)
@@ -377,8 +385,9 @@ class Game extends React.Component {
   applyBodyPart(e) {
     const stateName = e.target.getAttribute('name')
     const imgName = e.target.id
+    let position = 0
 
-    const returnObj = {}
+    let returnObj = {}
     const pattern = imgName.substring(3, 0).toLowerCase()
     let targetState =''
 
@@ -387,13 +396,23 @@ class Game extends React.Component {
         targetState = key
       }
     })
-    console.log(this.state[targetState])
+
     this.state[targetState].filter(obj => {
       if(obj.name == imgName){
+        console.log(obj.position)
+        position = obj.position
         returnObj[stateName] = obj
       }
     })
-
+    if (position == 3) {
+      returnObj = {...returnObj, haHidden: true, clZindex: 2, leHidden: false, haHidden: true}
+    } else if (position == 2){
+      returnObj = {...returnObj, haHidden: false, clZindex: 2, leHidden: false, haHidden: false}
+    } else if (position == 4){
+      returnObj = {...returnObj, haHidden: false, clZindex: 1, leHidden: true, haHidden: true}
+    } else {
+      returnObj = {...returnObj, haHidden: false, clZindex: 1, leHidden: false, haHidden: false}
+    }
     this.setState(returnObj)
 
   }
@@ -407,31 +426,31 @@ class Game extends React.Component {
           <button onClick={this.previousBackground}>previous</button>
           <button onClick={this.nextBackground}>next</button>
         </div>
-        <div className='clothes' style={{backgroundImage: `url(${this.state.appliedClothes.url})`}}>
+        <div className='clothes' style={{backgroundImage: `url(${this.state.appliedClothes.url})`, zIndex: this.state.clZindex}}>
 
         </div>
-        <div className='legs' style={{backgroundImage: `url(${this.state.appliedLegs.url})`}}>
+        <div className={!this.state.leHidden ? 'legs' : ""} style={{backgroundImage: `url(${this.state.appliedLegs.url})`}}>
 
         </div>
-        <div className='hands' style={{backgroundImage: `url(${this.state.appliedHands.url})`}}>
+        <div className={!this.state.haHidden ? 'hands' : ""} style={{backgroundImage: `url(${this.state.appliedHands.url})`}}>
 
         </div>
-        <div className='head' style={{backgroundImage: `url(${this.state.appliedHeads})`}}>
+        <div className={!this.state.headHidden ? 'head' : ""} style={{backgroundImage: `url(${this.state.appliedHeads})`}}>
+
+        </div>
+        <div className='mask' style={{backgroundImage: `url(${this.state.appliedMasks.url})`}}>
 
         </div>
         <div className='hair' style={{backgroundImage: `url(${this.state.appliedHair.url})`}}>
 
         </div>
-        <div className='eyes' style={{backgroundImage: `url(${this.state.appliedEyes.url})`}}>
+        <div className={!this.state.eyHidden ? 'eyes' : ""} style={{backgroundImage: `url(${this.state.appliedEyes.url})`}}>
 
         </div>
-        <div className='mouth' style={{backgroundImage: `url(${this.state.appliedMouths.url})`}}>
+        <div className={!this.state.moHidden ? 'mouth' : ""} style={{backgroundImage: `url(${this.state.appliedMouths.url})`}}>
 
         </div>
         <div className='brows' style={{backgroundImage: `url(${this.state.appliedBrows.url})`}}>
-
-        </div>
-        <div className='mask' style={{backgroundImage: `url(${this.state.appliedMasks.url})`}}>
 
         </div>
         <div className='hat' style={{backgroundImage: `url(${this.state.appliedHats.url})`}}>
