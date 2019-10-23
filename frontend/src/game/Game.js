@@ -8,8 +8,10 @@ class Game extends React.Component {
     super()
     this.state = {
       backgrCount: 0,
+      gameStart: false,
       backgrounds: [],
       additionalBackgrounds: [],
+      addBkgr: [],
       beards: [],
       boobs: [],
       brows: [],
@@ -26,6 +28,7 @@ class Game extends React.Component {
       scars: [],
       empty: [],
       showDropdown: false,
+      showBgDropdown: false,
       dropdownBtnText: 'Морда лица',
       faceButtonsText: 'Глаза',
       formData: {},
@@ -52,14 +55,19 @@ class Game extends React.Component {
       eySliderValue: 0,
       moSliderValue: 0,
       brSliderValue: 0,
-      boSliderValue: 400
+      boSliderValue: 400,
+      textHeight: 0
     }
 
+    this.startGame = this.startGame.bind(this)
     this.sortImages = this.sortImages.bind(this)
     this.previousBackground = this.previousBackground.bind(this)
     this.nextBackground = this.nextBackground.bind(this)
+    this.setBackground = this.setBackground.bind(this)
     this.toggleDropdown = this.toggleDropdown.bind(this)
+    this.toggleBgDropdown = this.toggleBgDropdown.bind(this)
     this.closeDropdown = this.closeDropdown.bind(this)
+    this.closeBgDropdown = this.closeBgDropdown.bind(this)
     this.switchControlPanelTab = this.switchControlPanelTab.bind(this)
     this.switchFaceTab = this.switchFaceTab.bind(this)
     this.setEyesButtons = this.setEyesButtons.bind(this)
@@ -83,6 +91,10 @@ class Game extends React.Component {
     this.sortBodyImages = this.sortBodyImages.bind(this)
     this.setDefaultBody = this.setDefaultBody.bind(this)
     this.resetPart = this.resetPart.bind(this)
+    this.setBackgroundDropdown = this.setBackgroundDropdown.bind(this)
+  }
+  startGame() {
+    this.setState({gameStart: true})
   }
 
   sortImages(imgs, pattern){
@@ -96,25 +108,60 @@ class Game extends React.Component {
   }
   previousBackground(){
     if(this.state.backgrCount !== 0) {
-      this.setState({ backgrCount: this.state.backgrCount-1 })
-    } else this.setState({ backgrCount: this.state.backgrounds.length-1 })
-
-    if(this.state.backgrounds[this.state.backgrCount-1].name.includes('10') || this.state.backgrounds[this.state.backgrCount-1].name.includes('11')){
-      console.log('additional bcgr required')
+      if(this.state.backgrCount-1 == 9){
+        this.setState({ addBkgr: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/AddBkgr10_1.png', backgrCount: this.state.backgrCount-1  })
+      } else {
+        this.setState({ addBkgr: '', backgrCount: this.state.backgrCount-1  })
+      }
+    } else {
+      this.setState({ backgrCount: this.state.backgrounds.length-1, addBkgr: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/AddBkgr11_1.png' })
     }
   }
+
   nextBackground(){
     if(this.state.backgrCount !== this.state.backgrounds.length-1) {
-      this.setState({ backgrCount: this.state.backgrCount+1 })
-    } else this.setState({ backgrCount: 0 })
+      if(this.state.backgrCount+1 == 9){
+        this.setState({ addBkgr: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/AddBkgr10_1.png', backgrCount: this.state.backgrCount+1  })
+      } else if (this.state.backgrCount+1 == 10){
+        this.setState({ addBkgr: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/AddBkgr11_1.png', backgrCount: this.state.backgrCount+1  })
+      } else {
+        this.setState({ addBkgr: '', backgrCount: this.state.backgrCount+1  })
+      }
+    } else this.setState({ backgrCount: 0, addBkgr: '', })
 
-    if(this.state.backgrounds[this.state.backgrCount+1].name.includes('10') || this.state.backgrounds[this.state.backgrCount+1].name.includes('11')){
-      console.log('additional bcgr required')
-    }
   }
 
+  setBackground(e){
+    let images = this.state.backgrounds
+    images.filter(image => {
+      if(image.url === e.target.id) {
+        if(image.name.split('_')[1]-1 == 9){
+          this.setState({backgrCount: image.name.split('_')[1]-1, addBkgr: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/AddBkgr10_1.png'})
+        } else if (image.name.split('_')[1]-1 == 10){
+          this.setState({backgrCount: image.name.split('_')[1]-1, addBkgr: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/AddBkgr11_1.png'})
+        } else {
+          this.setState({backgrCount: image.name.split('_')[1]-1, addBkgr: ''})
+        }
+      }
+
+    })
+  }
+
+  setBackgroundDropdown(){
+    let images = this.state.backgrounds
+    this.sortBodyImages(images)
+
+    return(
+      <div>
+        {images.map(image =>
+          <div onClick={this.setBackground} key={image.url} id={image.url} style={{backgroundImage: `url(${image.url})`, height: "80px", width: "150px", backgroundSize: "100%", backgroundRepeat: "no-repeat", border: '1px solid black'}}>
+
+          </div>
+        )}
+      </div>
+    )
+  }
   setDefaultBody() {
-    console.log(this.state.hands)
     this.setState({appliedHands: this.state.hands[0]})
   }
 
@@ -137,19 +184,35 @@ class Game extends React.Component {
         masks: this.sortImages(res.data, 'Mask'),
         mouths: this.sortImages(res.data, 'Mout'),
         scars: this.sortImages(res.data, 'Scar'),
-        empty: this.sortImages(res.data, 'No')
+        empty: this.sortImages(res.data, 'No'),
+
 
       }))
 
   }
 
+  componentDidUpdate(){
+    if (this.state.formData.text && this.state.textHeight !== this.refs.text.clientHeight){
+      this.setState({textHeight: this.refs.text.clientHeight})
+      console.log(this.state.textHeight)
+    }
+  }
+
   toggleDropdown() {
     this.setState({ showDropdown: !this.state.showDropdown })
   }
+  toggleBgDropdown() {
+    this.setState({ showBgDropdown: !this.state.showBgDropdown })
+  }
 
   closeDropdown() {
-    this.setState({ showDropdown: false })
+    this.setState({ showDropdown: false, showBgDropdown: false  })
   }
+
+  closeBgDropdown() {
+    this.setState({showBgDropdown: false  })
+  }
+
 
   switchControlPanelTab(e) {
     this.setState({
@@ -201,6 +264,7 @@ class Game extends React.Component {
           className='browsButton'
           onClick={this.resetPart}
           id='appliedBrows'>
+          <i className="fas fa-times clear"></i>
         </div>
         {images.map(image =>
           <div
@@ -290,6 +354,7 @@ class Game extends React.Component {
           className='boobsButton'
           onClick={this.resetPart}
           id='appliedBoobs'>
+          <i className="fas fa-times clear"></i>
         </div>
         {images.map(image =>
           <div
@@ -337,6 +402,7 @@ class Game extends React.Component {
           className='hairButton'
           onClick={this.resetPart}
           id='appliedHair'>
+          <i className="fas fa-times clear"></i>
         </div>
         {images.map(image =>
           <div
@@ -363,6 +429,7 @@ class Game extends React.Component {
           className='hairButton'
           onClick={this.resetPart}
           id='appliedBeard'>
+          <i className="fas fa-times clear"></i>
         </div>
         {images.map(image =>
           <div
@@ -388,6 +455,7 @@ class Game extends React.Component {
           className='hairButton'
           onClick={this.resetPart}
           id='appliedGlasses'>
+          <i className="fas fa-times clear"></i>
         </div>
         {images.map(image =>
           <div
@@ -414,6 +482,7 @@ class Game extends React.Component {
           className='hairButton'
           onClick={this.resetPart}
           id='appliedHats'>
+          <i className="fas fa-times clear"></i>
         </div>
         {images.map(image =>
           <div
@@ -439,6 +508,7 @@ class Game extends React.Component {
           className='hairButton'
           onClick={this.resetPart}
           id='appliedMasks'>
+          <i className="fas fa-times clear"></i>
         </div>
         {images.map(image =>
           <div
@@ -526,18 +596,38 @@ class Game extends React.Component {
   }
 
   render(){
-    if (!this.state.backgrounds[0]) return 'Loading...'
+    if (!this.state.backgrounds[0]) {
+      return (
+        <div className="gamefield">
+          <div className='splashscreen'>
+            <h1 className="version">V2.0</h1>
+            <h1 className="splashtext">Loading...</h1>
+          </div>
+        </div>
+      )
+    }
     console.log()
     return (
       <div className="gamefield" style={{backgroundImage: `url(${this.state.backgrounds[this.state.backgrCount].url})`}}
       >
-        <div className='back' onClick={this.closeDropdown}>
+        <div className='splashscreen' style={this.state.gameStart ? {display: 'none'} : {display: 'flex'}}>
+        <h1 className="version">V2.0</h1>
+        <button onClick={this.startGame}className="startButton" >Жмяк</button>
         </div>
-        <div>
-          <button onClick={this.previousBackground}>previous</button>
-          <button onClick={this.nextBackground}>next</button>
+        <div className='chooseBkgr'>
+          <button className='chooseBkgrButton' onClick={this.previousBackground}>Туда</button>
+
+          <div className="dropdown">
+            <div id="myDropdown" className={this.state.showBgDropdown ? 'openBgDropdown' : 'hideBgDropdown'}>
+            {this.setBackgroundDropdown()}
+            </div>
+            <button onClick={this.toggleBgDropdown} className="dropbtnBg">Выбрать фон&nbsp;&nbsp; <i className="fas fa-caret-down"></i></button>
+          </div>
+          <button className='chooseBkgrButton' onClick={this.nextBackground}>Сюда</button>
         </div>
-        <div className="bodyContainer">
+        <div className='back' onClick={this.closeDropdown} style={{backgroundImage: `url(${this.state.addBkgr})`}}>
+        </div>
+        <div className="bodyContainer" onClick={this.closeDropdown}>
           <div className='clothes' style={{backgroundImage: `url(${this.state.appliedClothes.url})`, zIndex: this.state.clZindex, backgroundSize: `${this.state.boSliderValue}px 515px`}}>
 
           </div>
@@ -581,14 +671,14 @@ class Game extends React.Component {
         <div className={!this.state.formData.text ? "" : 'pointer'}>
 
         </div>
-        <div className='characterText'>
+        <div className='characterText' ref='text' style={{top: `${100-this.state.textHeight}px`}}>
           {this.state.formData.text}
         </div>
-        <input ref="field" onChange={this.handleChange} name='text' className="input is-small input-width" type="text" placeholder="Реплика персонажа" />
-        <div  className="controlPanel">
+        <input maxLength='100' ref="field" onChange={this.handleChange} name='text' className="input is-small input-width charInput" type="text" placeholder="Реплика персонажа" />
+        <div  className="controlPanel" onClick={this.closeBgDropdown}>
           <div>
             <div className="dropdown">
-              <button onClick={this.toggleDropdown} className="dropbtn">{this.state.dropdownBtnText}</button>
+              <button onClick={this.toggleDropdown} className="dropbtn">{this.state.dropdownBtnText}&nbsp;&nbsp; <i className="fas fa-caret-down"></i></button>
               <div id="myDropdown" className={` ${this.state.showDropdown ? 'openDropdown' : 'hideDropdown'}`}>
                 <a href="#"
                   onClick={this.switchControlPanelTab}
@@ -596,8 +686,8 @@ class Game extends React.Component {
                 >Морда лица</a>
                 <a href="#"
                   onClick={this.switchControlPanelTab}
-                  name='Конечности'
-                >Конечности</a>
+                  name='Конечности и тушка'
+                >Конечности и тушка</a>
                 <a href="#"
                   onClick={this.switchControlPanelTab}
                   name='Шмот'
@@ -675,7 +765,7 @@ class Game extends React.Component {
                 {this.setBrowsButtons()}
               </div>
             </div>
-            <div className={` ${this.state.dropdownBtnText === 'Конечности' ? 'showTab' : 'hideTab'}`}>
+            <div className={` ${this.state.dropdownBtnText === 'Конечности и тушка' ? 'showTab' : 'hideTab'}`}>
               <div className="sliderContainer">
                 <h1>Размер тушки</h1>
                 <input
@@ -691,13 +781,10 @@ class Game extends React.Component {
               <br />
               <h1>Руки</h1>
               {this.setHandsButtons()}
-              <br />
               <h1>Ноги</h1>
               {this.setLegsButtons()}
-              <br />
-              <h1>Сиськи</h1>
+              <h1>Сиськи!</h1>
               {this.setBoobsButtons()}
-              <br />
             </div>
             <div className={` ${this.state.dropdownBtnText === 'Шмот' ? 'showTab' : 'hideTab'}`}>
               {this.setClothesButtons()}
@@ -706,9 +793,13 @@ class Game extends React.Component {
               {this.setHairButtons()}
             </div>
             <div className={` ${this.state.dropdownBtnText === 'Всякое' ? 'showTab' : 'hideTab'}`}>
+              <h1>Растительность</h1>
               {this.setBeardButtons()}
+              <h1>Очки</h1>
               {this.setGlassesButtons()}
+              <h1>Головные уборы</h1>
               {this.setHatsButtons()}
+              <h1>Маски</h1>
               {this.setMasksButtons()}
             </div>
           </div>
