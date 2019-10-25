@@ -30,8 +30,7 @@ class Register extends React.Component {
         this.props.history.push('login/')
       })
       .catch(err => {
-        console.log(err)
-        this.setState({ errors: err.response.data.errors })
+        this.setState({ errors: err.response.data })
       })
 
   }

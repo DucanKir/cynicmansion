@@ -73,12 +73,12 @@ class Navbar extends React.Component {
                 <div className="buttons">
                   {!Auth.isAuthenticated() &&
                     <Link to="/register" className="button is-light">
-                      <strong>Sign up</strong>
+                      <strong>Регистрация</strong>
                     </Link>
                   }
                   {!Auth.isAuthenticated() &&
                     <Link  to="/login" className="button is-light">
-                      Log in
+                      Войти
                     </Link>
                   }
                   {Auth.isAuthenticated() &&
@@ -92,7 +92,7 @@ class Navbar extends React.Component {
                       className="button is-dark"
                       onClick={this.logout}
                     >
-                      Logout
+                      Выйти
                     </Link>
                   }
                 </div>
