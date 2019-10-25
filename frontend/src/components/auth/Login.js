@@ -4,6 +4,15 @@ import { toast } from 'react-toastify'
 
 import Auth from '../../lib/Auth'
 
+import Cookies from 'universal-cookie'
+const cookies = new Cookies()
+const cookie = cookies.get('csrftoken')
+
+const headers = {
+  'Content-Type': 'application/json',
+  'X-CSRFToken': cookie
+}
+
 class Login extends React.Component {
 
   constructor() {
@@ -26,7 +35,7 @@ class Login extends React.Component {
   handleSubmit(e) {
     e.preventDefault()
 
-    axios.post('/api/login/', this.state.formData)
+    axios.post('/api/api/v1/accounts/login/', this.state.formData, {headers: headers})
       .then(res => {
         Auth.setToken(res.data.token) // store the token in localStorage
         toast.success(res.data.message)
@@ -59,8 +68,8 @@ class Login extends React.Component {
                   <div className="control">
                     <input
                       className="input"
-                      type="username"
-                      name="username"
+                      type="login"
+                      name="login"
                       placeholder="eg"
                       onChange={this.handleChange}
                     />

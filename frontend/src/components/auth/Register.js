@@ -1,6 +1,16 @@
 import React from 'react'
 import axios from 'axios'
 import { toast } from 'react-toastify'
+import Cookies from 'universal-cookie'
+
+const cookies = new Cookies()
+
+const cookie = cookies.get('csrftoken')
+
+const headers = {
+  'Content-Type': 'application/json',
+  'X-CSRFToken': cookie
+}
 
 class Register extends React.Component {
 
@@ -15,16 +25,23 @@ class Register extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this)
   }
 
+  componentDidMount(){
+    const cookie = cookies.getAll()
+    this.setState({cookie: cookie.csrftoken})
+  }
+
   handleChange(e) {
     const formData = { ...this.state.formData, [e.target.name]: e.target.value }
     const errors = { ...this.state.errors, [e.target.name]: '' }
     this.setState({ formData, errors })
+
+    console.log(this.state.cookie)
   }
 
   handleSubmit(e) {
     e.preventDefault()
 
-    axios.post('/api/register/', this.state.formData)
+    axios.post('/api/api/v1/accounts/register/', this.state.formData, {headers: headers})
       .then(res => {
         toast.success(res.data.message)
         this.props.history.push('login/')
@@ -34,6 +51,9 @@ class Register extends React.Component {
       })
 
   }
+
+
+
 
   render() {
     if (!this.state) return 'loading'
@@ -92,12 +112,12 @@ class Register extends React.Component {
                     <input
                       className="input"
                       type="password"
-                      name="password_confirmation"
+                      name="password_confirm"
                       placeholder="eg: ••••••••"
                       onChange={this.handleChange}
                     />
                   </div>
-                  {this.state.errors.password_confirmation && <small className="help is-danger">{this.state.errors.password_confirmation}</small>}
+                  {this.state.errors.password_confirm && <small className="help is-danger">{this.state.errors.password_confirm}</small>}
                 </div>
                 <br />
                 <div className="has-text-centered">

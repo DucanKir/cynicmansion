@@ -1,6 +1,5 @@
 import React from 'react'
 import axios from 'axios'
-import Promise from 'bluebird'
 
 class Game extends React.Component {
 
@@ -93,6 +92,8 @@ class Game extends React.Component {
     this.resetPart = this.resetPart.bind(this)
     this.setBackgroundDropdown = this.setBackgroundDropdown.bind(this)
   }
+
+  
   startGame() {
     this.setState({gameStart: true})
   }
@@ -194,8 +195,9 @@ class Game extends React.Component {
   componentDidUpdate(){
     if (this.state.formData.text && this.state.textHeight !== this.refs.text.clientHeight){
       this.setState({textHeight: this.refs.text.clientHeight})
-      console.log(this.state.textHeight)
+
     }
+    console.log(this.props)
   }
 
   toggleDropdown() {

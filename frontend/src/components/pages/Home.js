@@ -9,6 +9,10 @@ import Game from '../../game/Game'
 
 class Home extends React.Component {
 
+  componentDidMount(){
+  
+  }
+
   render(){
     return (
       <div>

@@ -2,12 +2,15 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
 from django.contrib.auth.models import User
+from rest_framework.permissions import AllowAny
 from django.conf import settings
 import jwt
 from .serializers import UserSerializer
 import datetime
 
 class RegisterView(APIView):
+
+    permission_classes = [AllowAny]
 
     def post(self, request):
         serializer = UserSerializer(data=request.data)
@@ -19,6 +22,8 @@ class RegisterView(APIView):
 
 
 class LoginView(APIView):
+
+    permission_classes = [AllowAny]
 
     def get_user(self, username):
         try:
