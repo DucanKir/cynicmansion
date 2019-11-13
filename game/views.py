@@ -4,8 +4,8 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from django.http import Http404
 from .permissions import IsOwnerOrReadOnly
 
-from .serializers import PopulatedImageSerializer
-from .models import Image
+from .serializers import PopulatedImageSerializer, PopulatedCommentSerializer
+from .models import Image, Comment
 
 
 class ImagesList(APIView):
@@ -47,4 +47,39 @@ class ImageDetail(APIView):
     def delete(self, _request, pk):
         image = self.get_image(pk)
         image.delete()
+        return Response(status=204)
+
+class CommentsList(APIView):
+
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+
+    def get(self, _request):
+        comment = Comment.objects.all()
+        serializer = PopulatedCommentSerializer(comment, many=True)
+        return Response(serializer.data)
+
+class CommentDetailView(APIView):
+
+    permission_classes = (IsOwnerOrReadOnly,)
+
+    def get(self, _request, pk):
+        comment = Comment.objects.get(pk=pk)
+        serializer = PopulatedCommentSerializer(comment)
+        return Response(serializer.data)
+
+    def put(self, request, pk):
+        comment = Comment.objects.get(pk=pk)
+        serializer = PopulatedCommentSerializer(comment, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+
+        return Response(serializer.errors, status=422)
+
+
+
+    def delete(self, _request, pk):
+        comment = Comment.objects.get(pk=pk)
+        comment.delete()
+
         return Response(status=204)

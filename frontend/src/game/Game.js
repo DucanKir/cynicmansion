@@ -93,7 +93,7 @@ class Game extends React.Component {
     this.setBackgroundDropdown = this.setBackgroundDropdown.bind(this)
   }
 
-  
+
   startGame() {
     this.setState({gameStart: true})
   }
@@ -197,7 +197,7 @@ class Game extends React.Component {
       this.setState({textHeight: this.refs.text.clientHeight})
 
     }
-    console.log(this.props)
+    console.log()
   }
 
   toggleDropdown() {

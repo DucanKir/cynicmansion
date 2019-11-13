@@ -36,11 +36,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     'rest_framework',
     'rest_registration',
     'drf_yasg',
     'game',
+    'disqus',
 ]
+SITE_ID = 1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -130,8 +133,11 @@ REST_FRAMEWORK = {
         'jwt_auth.authentication.JWTAuthentication',
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.permissions.AllowAny',
+
     ],
+    'DEFAULT_PERMISSION_CLASSES': [
+    'rest_framework.permissions.AllowAny',
+    ]
 }
 
 REST_REGISTRATION = {
@@ -140,3 +146,6 @@ REST_REGISTRATION = {
     'REGISTER_EMAIL_VERIFICATION_ENABLED': False,
     'REGISTER_VERIFICATION_AUTO_LOGIN': True,
 }
+
+DISQUS_API_KEY = 'u62qczQRmN3s9f3GSOoFitlJjLAsYWCHgbQ5DRFKwm3vFeqQMlHdXTDgqg7Dl71a'
+DISQUS_WEBSITE_SHORTNAME = 'Cynic Editor'

@@ -5,12 +5,13 @@ import '@fortawesome/free-solid-svg-icons'
 import '@fortawesome/react-fontawesome'
 
 import Game from '../../game/Game'
+import Comments from '../common/Comments'
 
 
 class Home extends React.Component {
 
   componentDidMount(){
-  
+    
   }
 
   render(){
@@ -20,6 +21,7 @@ class Home extends React.Component {
         <div className="gamecontainer" >
           <Game />
         </div>
+        <Comments />
       </div>
     )
   }

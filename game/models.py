@@ -10,3 +10,11 @@ class Image(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Comment(models.Model):
+    content = models.TextField()
+    user = models.ForeignKey(User, related_name='comments', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.content}'

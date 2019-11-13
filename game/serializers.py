@@ -1,5 +1,5 @@
 from rest_framework  import serializers
-from .models import Image
+from .models import Image, Comment
 from jwt_auth.serializers import UserSerializer
 
 class PopulatedImageSerializer(serializers.ModelSerializer):
@@ -32,3 +32,15 @@ class ImageDeserializer(serializers.ModelSerializer):
 
 
         return image
+
+class CommentSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Comment
+        fields = ('id', 'user', 'content',)
+
+class PopulatedCommentSerializer(CommentSerializer):
+    user = UserSerializer()
+
+    class Meta(CommentSerializer.Meta):
+        fields = '__all__'
