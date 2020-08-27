@@ -1,0 +1,8 @@
+django
+djangorestframework
+django-rest-registration
+drf_yasg
+disqus-python
+disqus
+api
+jwt
