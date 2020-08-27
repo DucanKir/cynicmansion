@@ -616,7 +616,7 @@ class Game extends React.Component {
       return (
         <div className="gamefield">
           <div className='splashscreen'>
-            <h1 className="version">V2.0</h1>
+            <h1 className="version">V2.0 test</h1>
             <h1 className="splashtext">Loading...</h1>
           </div>
         </div>
