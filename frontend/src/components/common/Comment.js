@@ -14,9 +14,9 @@ const Comment = ({ id, user, content, handleDeleteComment }) => {
           </p>
         </div>
       </div>
-      {Auth.currentUser() === user.id && <div key={id} className="media-right">
+      <div key={id} className="media-right">
         <button className="delete" id={id} onClick={handleDeleteComment}></button>
-      </div>}
+      </div>
     </article>
   )
 }

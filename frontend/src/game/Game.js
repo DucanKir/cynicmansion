@@ -1,5 +1,6 @@
 import React from 'react'
 import axios from 'axios'
+import html2canvas from 'html2canvas';
 
 class Game extends React.Component {
 
@@ -31,18 +32,18 @@ class Game extends React.Component {
       dropdownBtnText: 'Морда лица',
       faceButtonsText: 'Глаза',
       formData: {},
-      appliedBeard: '',
-      appliedBoobs: '',
-      appliedBrows: '',
+      appliedBeard: {url: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/Non.png'},
+      appliedBoobs:  {url: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/Non.png'},
+      appliedBrows:  {url: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/Non.png'},
       appliedClothes: {url: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/Body.png'},
       appliedEyes: {url: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/Eyes0.png'},
-      appliedGlasses: '',
-      appliedHair: '',
+      appliedGlasses:  {url: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/Non.png'},
+      appliedHair:  {url: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/Non.png'},
       appliedHands: {url: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/Hands1.png'},
-      appliedHats: '',
-      appliedHeads: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/Head1.png',
+      appliedHats:  {url: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/Non.png'},
+      appliedHeads: {url: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/Head1.png'},
       appliedLegs: {url: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/Legs2_0.png'},
-      appliedMasks: '',
+      appliedMasks:  {url: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/Non.png'},
       appliedMouths: {url: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/Mouth6.png'},
       heHidden: false,
       haHidden: false,
@@ -91,6 +92,7 @@ class Game extends React.Component {
     this.setDefaultBody = this.setDefaultBody.bind(this)
     this.resetPart = this.resetPart.bind(this)
     this.setBackgroundDropdown = this.setBackgroundDropdown.bind(this)
+    this.takePicture = this.takePicture.bind(this)
   }
 
 
@@ -266,7 +268,7 @@ class Game extends React.Component {
           className='browsButton'
           onClick={this.resetPart}
           id='appliedBrows'>
-          <i className="fas fa-times clear"></i>
+          <i style={{pointerEvents: 'none'}} className="fas fa-times clear"></i>
         </div>
         {images.map(image =>
           <div
@@ -356,7 +358,7 @@ class Game extends React.Component {
           className='boobsButton'
           onClick={this.resetPart}
           id='appliedBoobs'>
-          <i className="fas fa-times clear"></i>
+          <i style={{pointerEvents: 'none'}} className="fas fa-times clear"></i>
         </div>
         {images.map(image =>
           <div
@@ -404,7 +406,7 @@ class Game extends React.Component {
           className='hairButton'
           onClick={this.resetPart}
           id='appliedHair'>
-          <i className="fas fa-times clear"></i>
+          <i style={{pointerEvents: 'none'}} className="fas fa-times clear"></i>
         </div>
         {images.map(image =>
           <div
@@ -431,7 +433,7 @@ class Game extends React.Component {
           className='hairButton'
           onClick={this.resetPart}
           id='appliedBeard'>
-          <i className="fas fa-times clear"></i>
+          <i style={{pointerEvents: 'none'}} className="fas fa-times clear"></i>
         </div>
         {images.map(image =>
           <div
@@ -457,7 +459,7 @@ class Game extends React.Component {
           className='hairButton'
           onClick={this.resetPart}
           id='appliedGlasses'>
-          <i className="fas fa-times clear"></i>
+          <i style={{pointerEvents: 'none'}} className="fas fa-times clear"></i>
         </div>
         {images.map(image =>
           <div
@@ -484,7 +486,7 @@ class Game extends React.Component {
           className='hairButton'
           onClick={this.resetPart}
           id='appliedHats'>
-          <i className="fas fa-times clear"></i>
+          <i style={{pointerEvents: 'none'}} className="fas fa-times clear"></i>
         </div>
         {images.map(image =>
           <div
@@ -510,7 +512,7 @@ class Game extends React.Component {
           className='hairButton'
           onClick={this.resetPart}
           id='appliedMasks'>
-          <i className="fas fa-times clear"></i>
+          <i style={{pointerEvents: 'none'}} className="fas fa-times clear"></i>
         </div>
         {images.map(image =>
           <div
@@ -572,6 +574,8 @@ class Game extends React.Component {
         returnObj = {...returnObj, eyHidden: true, moHidden: true, brHidden: true, heHidden: false}
       } else if (position == 4) {
         returnObj = {...returnObj, eyHidden: true, moHidden: true, brHidden: true, heHidden: true}
+      }else if (position == 5) {
+        returnObj = {...returnObj, eyHidden: false, moHidden: true, true: false, heHidden: true}
       } else {
         returnObj = {...returnObj, eyHidden: false, moHidden: false, brHidden: false, heHidden: false}
       }
@@ -597,6 +601,16 @@ class Game extends React.Component {
     this.setState({boSliderValue: e.target.value, })
   }
 
+  takePicture(){
+    html2canvas(document.querySelector("#capture")).then(function(canvas) {
+      // Export the canvas to its data URI representation
+      var base64image = canvas.toDataURL("image/png");
+  
+      // Open the image in a new window
+      window.open(base64image , "_blank");
+    })
+  }
+
   render(){
     if (!this.state.backgrounds[0]) {
       return (
@@ -610,8 +624,9 @@ class Game extends React.Component {
     }
     console.log()
     return (
-      <div className="gamefield" style={{backgroundImage: `url(${this.state.backgrounds[this.state.backgrCount].url})`}}
+      <div  className="gamefield" style={{ backgroundImage: `url(${this.state.backgrounds[this.state.backgrCount].url})`}}
       >
+        
         <div className='splashscreen' style={this.state.gameStart ? {display: 'none'} : {display: 'flex'}}>
         <h1 className="version">V2.0</h1>
         <button onClick={this.startGame}className="startButton" >Жмяк</button>
@@ -686,7 +701,7 @@ class Game extends React.Component {
                   onClick={this.switchControlPanelTab}
                   name='Морда лица'
                 >Морда лица</a>
-                <a href="#"
+                <a id="capture" href="#"
                   onClick={this.switchControlPanelTab}
                   name='Конечности и тушка'
                 >Конечности и тушка</a>

@@ -6,8 +6,8 @@
   "scripts": {
     "build": "webpack -p",
     "serve:frontend": "webpack-dev-server",
-    "serve:backend": "python manage.py runserver 4000",
-    "seed": "python manage.py loaddata game/fixtures.json"
+    "serve:backend": "python3 manage.py runserver 4000",
+    "seed": "python3 manage.py loaddata game/fixtures.json"
   },
   "dependencies": {
     "@babel/core": "^7.5.5",
@@ -24,6 +24,7 @@
     "css-loader": "^3.2.0",
     "file-loader": "^4.2.0",
     "html-webpack-plugin": "^3.2.0",
+    "html2canvas": "^1.0.0-rc.7",
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.24.0",
     "node-sass": "^4.12.0",
