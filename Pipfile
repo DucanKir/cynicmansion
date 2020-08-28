@@ -13,6 +13,7 @@ boto3 = "*"
 djangorestframework-jwt = "*"
 pyjwt = "*"
 psycopg2-binary = "*"
+django_heroku = "*"
 
 
 [requires]
