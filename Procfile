@@ -1,1 +1,1 @@
-web: gunicorn cynic-editor.wsgi
+web: pythpn manage.py runserver 0.0.0:$PORT --noreload
