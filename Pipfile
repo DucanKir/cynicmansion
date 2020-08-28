@@ -14,7 +14,7 @@ djangorestframework-jwt = "*"
 pyjwt = "*"
 psycopg2-binary = "*"
 django_heroku = "*"
-rest_registration = "*"
+django-rest-registration = "*"
 
 
 [requires]
