@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 import os
+import django_heroku
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -149,3 +150,6 @@ REST_REGISTRATION = {
 
 DISQUS_API_KEY = 'u62qczQRmN3s9f3GSOoFitlJjLAsYWCHgbQ5DRFKwm3vFeqQMlHdXTDgqg7Dl71a'
 DISQUS_WEBSITE_SHORTNAME = 'Cynic Editor'
+
+# Activate Django-Heroku.
+django_heroku.settings(locals())
