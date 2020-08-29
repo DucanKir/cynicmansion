@@ -4,11 +4,18 @@ import html2canvas from 'html2canvas';
 
 class Game extends React.Component {
 
+  uuidv4() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
+  }
+
   constructor() {
     super()
     this.state = {
-      backgrCount: 0,
       gameStart: false,
+      backgrCount: 0,
       backgrounds: [],
       additionalBackgrounds: [],
       addBkgr: [],
@@ -32,31 +39,9 @@ class Game extends React.Component {
       dropdownBtnText: 'Морда лица',
       faceButtonsText: 'Глаза',
       formData: {},
-      appliedBeard: {url: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/Non.png'},
-      appliedBoobs:  {url: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/Non.png'},
-      appliedBrows:  {url: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/Non.png'},
-      appliedClothes: {url: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/Body.png'},
-      appliedEyes: {url: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/Eyes0.png'},
-      appliedGlasses:  {url: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/Non.png'},
-      appliedHair:  {url: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/Non.png'},
-      appliedHands: {url: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/Hands1.png'},
-      appliedHats:  {url: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/Non.png'},
-      appliedHeads: {url: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/Head1.png'},
-      appliedLegs: {url: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/Legs2_0.png'},
-      appliedMasks:  {url: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/Non.png'},
-      appliedMouths: {url: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/Mouth6.png'},
-      heHidden: false,
-      haHidden: false,
-      leHidden: false,
-      eyHidden: false,
-      moHidden: false,
-      brHidden: false,
-      clZindex: 0,
-      eySliderValue: 0,
-      moSliderValue: 0,
-      brSliderValue: 0,
-      boSliderValue: 400,
-      textHeight: 0
+      currentCharacter: '',
+      characters: '',
+      textHeight: 0,
     }
 
     this.startGame = this.startGame.bind(this)
@@ -95,11 +80,49 @@ class Game extends React.Component {
     this.takePicture = this.takePicture.bind(this)
   }
 
-
-  startGame() {
-    this.setState({gameStart: true})
+  createCharacter() {
+    let UUID = this.uuidv4()
+    const newCharacter = {...this.state.characters, 
+                          [UUID]: {
+                              uuid: UUID,
+                              appliedBeard: {url: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/Non.png'},
+                              appliedBoobs:  {url: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/Non.png'},
+                              appliedBrows:  {url: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/Non.png'},
+                              appliedClothes: {url: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/Body.png'},
+                              appliedEyes: {url: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/Eyes0.png'},
+                              appliedGlasses:  {url: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/Non.png'},
+                              appliedHair:  {url: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/Non.png'},
+                              appliedHands: {url: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/Hands1.png'},
+                              appliedHats:  {url: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/Non.png'},
+                              appliedHeads: {url: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/Head1.png'},
+                              appliedLegs: {url: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/Legs2_0.png'},
+                              appliedMasks:  {url: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/Non.png'},
+                              appliedMouths: {url: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/Mouth6.png'},
+                              heHidden: false,
+                              haHidden: false,
+                              leHidden: false,
+                              eyHidden: false,
+                              moHidden: false,
+                              brHidden: false,
+                              clZindex: 0,
+                              eySliderValue: 0,
+                              moSliderValue: 0,
+                              brSliderValue: 0,
+                              boSliderValue: 400,
+                            }
+                          }
+      return newCharacter
+                
   }
 
+  
+  startGame() {
+    let character = Object.keys(this.state.characters)
+    this.setState({gameStart: true, currentCharacter: character})
+    
+  }
+
+  
   sortImages(imgs, pattern){
     const backgrList = []
     imgs.filter(img => {
@@ -112,25 +135,46 @@ class Game extends React.Component {
   previousBackground(){
     if(this.state.backgrCount !== 0) {
       if(this.state.backgrCount-1 == 9){
-        this.setState({ addBkgr: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/AddBkgr10_1.png', backgrCount: this.state.backgrCount-1  })
+        this.setState({ 
+          addBkgr: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/AddBkgr10_1.png', 
+          backgrCount: this.state.backgrCount-1  
+        })
       } else {
-        this.setState({ addBkgr: '', backgrCount: this.state.backgrCount-1  })
+        this.setState({ 
+          addBkgr: '', 
+          backgrCount: this.state.backgrCount-1  
+        })
       }
     } else {
-      this.setState({ backgrCount: this.state.backgrounds.length-1, addBkgr: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/AddBkgr11_1.png' })
+      this.setState({ 
+        backgrCount: this.state.backgrounds.length-1, 
+        addBkgr: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/AddBkgr11_1.png' 
+      })
     }
   }
 
   nextBackground(){
     if(this.state.backgrCount !== this.state.backgrounds.length-1) {
       if(this.state.backgrCount+1 == 9){
-        this.setState({ addBkgr: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/AddBkgr10_1.png', backgrCount: this.state.backgrCount+1  })
+        this.setState({ 
+          addBkgr: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/AddBkgr10_1.png', 
+          backgrCount: this.state.backgrCount+1  
+        })
       } else if (this.state.backgrCount+1 == 10){
-        this.setState({ addBkgr: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/AddBkgr11_1.png', backgrCount: this.state.backgrCount+1  })
+        this.setState({ 
+          addBkgr: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/AddBkgr11_1.png', 
+          backgrCount: this.state.backgrCount+1  
+        })
       } else {
-        this.setState({ addBkgr: '', backgrCount: this.state.backgrCount+1  })
+        this.setState({ 
+          addBkgr: '', 
+          backgrCount: this.state.backgrCount+1  
+        })
       }
-    } else this.setState({ backgrCount: 0, addBkgr: '', })
+    } else this.setState({ 
+        backgrCount: 0, 
+        addBkgr: '', 
+      })
 
   }
 
@@ -139,11 +183,19 @@ class Game extends React.Component {
     images.filter(image => {
       if(image.url === e.target.id) {
         if(image.name.split('_')[1]-1 == 9){
-          this.setState({backgrCount: image.name.split('_')[1]-1, addBkgr: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/AddBkgr10_1.png'})
+          this.setState({
+            backgrCount: image.name.split('_')[1]-1, 
+            addBkgr: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/AddBkgr10_1.png'})
         } else if (image.name.split('_')[1]-1 == 10){
-          this.setState({backgrCount: image.name.split('_')[1]-1, addBkgr: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/AddBkgr11_1.png'})
+            this.setState({
+              backgrCount: image.name.split('_')[1]-1, 
+              addBkgr: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/AddBkgr11_1.png'
+            })
         } else {
-          this.setState({backgrCount: image.name.split('_')[1]-1, addBkgr: ''})
+            this.setState({
+              backgrCount: image.name.split('_')[1]-1, 
+              addBkgr: ''
+            })
         }
       }
 
@@ -165,7 +217,7 @@ class Game extends React.Component {
     )
   }
   setDefaultBody() {
-    this.setState({appliedHands: this.state.hands[0]})
+    this.setState({...this.state.character0, character0: {appliedHands: this.state.hands[0]}})
   }
 
   componentDidMount(){
@@ -188,10 +240,11 @@ class Game extends React.Component {
         mouths: this.sortImages(res.data, 'Mout'),
         scars: this.sortImages(res.data, 'Scar'),
         empty: this.sortImages(res.data, 'No'),
+        characters: this.createCharacter()
 
 
       }))
-
+    
   }
 
   componentDidUpdate(){
@@ -385,7 +438,20 @@ class Game extends React.Component {
           <div
           key={image.id}
           id={image.name}
-          style={ image.name === 'Clothes_15' || image.name === 'Clothes_36' ||image.name === 'Clothes_37' ||image.name === 'Clothes_38' ||image.name === 'Clothes_39' ||image.name === 'Clothes_40' ||image.name === 'Clothes_41' ||image.name === 'Clothes_42' ||image.name === 'Clothes_43' ||image.name === 'Clothes_44' ||image.name === 'Clothes_78' ? {backgroundImage: `url(https://s3.eu-west-2.amazonaws.com/cynic.game.images/Head1.png), url(${image.url}), url(https://s3.eu-west-2.amazonaws.com/cynic.game.images/Legs2_0.png)`} : {backgroundImage: `url(https://s3.eu-west-2.amazonaws.com/cynic.game.images/Head1.png), url(https://s3.eu-west-2.amazonaws.com/cynic.game.images/Hands1.png), url(${image.url}), url(https://s3.eu-west-2.amazonaws.com/cynic.game.images/Legs2_0.png)`}}
+          style={ image.name === 'Clothes_15' || 
+                  image.name === 'Clothes_36' ||
+                  image.name === 'Clothes_37' ||
+                  image.name === 'Clothes_38' ||
+                  image.name === 'Clothes_39' ||
+                  image.name === 'Clothes_40' ||
+                  image.name === 'Clothes_41' ||
+                  image.name === 'Clothes_42' ||
+                  image.name === 'Clothes_43' ||
+                  image.name === 'Clothes_44' ||
+                  image.name === 'Clothes_78' ? 
+                  {backgroundImage: `url(https://s3.eu-west-2.amazonaws.com/cynic.game.images/Head1.png), url(${image.url}), url(https://s3.eu-west-2.amazonaws.com/cynic.game.images/Legs2_0.png)`} 
+                  : {backgroundImage: `url(https://s3.eu-west-2.amazonaws.com/cynic.game.images/Head1.png), url(https://s3.eu-west-2.amazonaws.com/cynic.game.images/Hands1.png), url(${image.url}), url(https://s3.eu-west-2.amazonaws.com/cynic.game.images/Legs2_0.png)`
+                }}
           className='clothesButton'
           onClick={this.applyBodyPart}
           name='appliedClothes'>
@@ -551,7 +617,6 @@ class Game extends React.Component {
 
     this.state[targetState].filter(obj => {
       if(obj.name == imgName){
-        console.log(obj.position)
         position = obj.position
         returnObj[stateName] = obj
       }
@@ -580,25 +645,36 @@ class Game extends React.Component {
         returnObj = {...returnObj, eyHidden: false, moHidden: false, brHidden: false, heHidden: false}
       }
     }
-    this.setState(returnObj)
+    let character = {...this.state.characters[this.state.currentCharacter], ...returnObj}
+    const characters = {...this.state.characters, [this.state.currentCharacter]: character}
+    console.log(this.state.characters)
+    this.setState({characters})
   }
 
   resetPart(e){
 
-    this.setState({[e.target.id]: '', eyHidden: false, moHidden: false, brHidden: false, heHidden: false})
+    this.setState({...this.state.character0, character0: {[e.target.id]: '', eyHidden: false, moHidden: false, brHidden: false, heHidden: false}})
   }
 
   handleEyesSliderChange(e) {
-    this.setState({eySliderValue: e.target.value})
+    let character = {...this.state.characters[this.state.currentCharacter], eySliderValue: e.target.value}
+    let characters = {...this.state.characters, [this.state.currentCharacter]: character}
+    this.setState({characters})
   }
   handleBrowsSliderChange(e) {
-    this.setState({brSliderValue: e.target.value})
+    let character = {...this.state.characters[this.state.currentCharacter], brSliderValue: e.target.value}
+    let characters = {...this.state.characters, [this.state.currentCharacter]: character}
+    this.setState({characters})
   }
   handleMouthSliderChange(e) {
-    this.setState({moSliderValue: e.target.value})
+    let character = {...this.state.characters[this.state.currentCharacter], moSliderValue: e.target.value}
+    let characters = {...this.state.characters, [this.state.currentCharacter]: character}
+    this.setState({characters})
   }
   handleBodySliderChange(e) {
-    this.setState({boSliderValue: e.target.value, })
+    let character = {...this.state.characters[this.state.currentCharacter], boSliderValue: e.target.value}
+    let characters = {...this.state.characters, [this.state.currentCharacter]: character}
+    this.setState({characters})
   }
 
   takePicture(){
@@ -612,90 +688,184 @@ class Game extends React.Component {
   }
 
   render(){
-    if (!this.state.backgrounds[0]) {
+    if (!this.state.backgrounds[0] || !this.state.gameStart || this.state.characters === {}) {
+      console.log()
       return (
         <div className="gamefield">
           <div className='splashscreen'>
-            <h1 className="version">V2.0 test</h1>
-            <h1 className="splashtext">Loading...</h1>
+            <h1 className="version">V2.0</h1>
+            <h1 style={this.state.backgrounds[0] ? {display: 'none'}:{display: 'block'}} className="splashtext">Loading...</h1>
+            <button style={this.state.backgrounds[0] ? {display: 'block'}:{display: 'none'}} onClick={this.startGame}className="startButton" >Жмяк</button>
           </div>
         </div>
       )
     }
-    console.log()
+
+    console.log(this.state.characters[this.state.currentCharacter].appliedClothes.url)
+
     return (
-      <div  className="gamefield" style={{ backgroundImage: `url(${this.state.backgrounds[this.state.backgrCount].url})`}}
+      <div  
+        className="gamefield" 
+        style={{ 
+          marginTop: '5px', 
+          backgroundImage: `url(${this.state.backgrounds[this.state.backgrCount].url})`
+        }}
       >
         
-        <div className='splashscreen' style={this.state.gameStart ? {display: 'none'} : {display: 'flex'}}>
-        <h1 className="version">V2.0</h1>
-        <button onClick={this.startGame}className="startButton" >Жмяк</button>
-        </div>
         <div className='chooseBkgr'>
           <button className='chooseBkgrButton' onClick={this.previousBackground}>Туда</button>
 
           <div className="dropdown">
-            <div id="myDropdown" className={this.state.showBgDropdown ? 'openBgDropdown' : 'hideBgDropdown'}>
+            <div 
+              id="myDropdown" 
+              className={this.state.showBgDropdown ? 'openBgDropdown' : 'hideBgDropdown'}
+            >
             {this.setBackgroundDropdown()}
             </div>
-            <button onClick={this.toggleBgDropdown} className="dropbtnBg">Выбрать фон&nbsp;&nbsp; <i className="fas fa-caret-down"></i></button>
+            <button onClick={this.toggleBgDropdown} className="dropbtnBg">
+              Выбрать фон&nbsp;&nbsp; 
+              <i className="fas fa-caret-down"></i>
+            </button>
           </div>
           <button className='chooseBkgrButton' onClick={this.nextBackground}>Сюда</button>
         </div>
-        <div className='back' onClick={this.closeDropdown} style={{backgroundImage: `url(${this.state.addBkgr})`}}>
+        <div className='back' 
+          onClick={this.closeDropdown} 
+          style={{pointerEvents: 'none', backgroundImage: `url(${this.state.addBkgr})`}}
+        >
         </div>
         <div className="bodyContainer" onClick={this.closeDropdown}>
-          <div className='clothes' style={{backgroundImage: `url(${this.state.appliedClothes.url})`, zIndex: this.state.clZindex, backgroundSize: `${this.state.boSliderValue}px 515px`}}>
+          <div 
+            className='clothes' 
+            style={{
+              pointerEvents: 'none', 
+              backgroundImage: `url(${this.state.characters[this.state.currentCharacter].appliedClothes.url})`, 
+              zIndex: this.state.characters[this.state.currentCharacter].clZindex, 
+              backgroundSize: `${this.state.characters[this.state.currentCharacter].boSliderValue}px 515px`}}
+            >
+          </div>
+          <div 
+            className={!this.state.characters[this.state.currentCharacter].leHidden ? 'legs' : ""} 
+            style={{
+              pointerEvents: 'none', 
+              backgroundImage: `url(${this.state.characters[this.state.currentCharacter].appliedLegs.url})`, 
+              backgroundSize: `${this.state.characters[this.state.currentCharacter].boSliderValue}px 515px`}}>
 
           </div>
-          <div className={!this.state.leHidden ? 'legs' : ""} style={{backgroundImage: `url(${this.state.appliedLegs.url})`, backgroundSize: `${this.state.boSliderValue}px 515px`}}>
+          <div 
+            className={!this.state.characters[this.state.currentCharacter].haHidden ? 'hands' : ""} 
+            style={{
+              pointerEvents: 'none', 
+              backgroundImage: `url(${this.state.characters[this.state.currentCharacter].appliedHands.url})`, 
+              backgroundSize: `${this.state.characters[this.state.currentCharacter].boSliderValue}px 515px`}}>
 
           </div>
-          <div className={!this.state.haHidden ? 'hands' : ""} style={{backgroundImage: `url(${this.state.appliedHands.url})`, backgroundSize: `${this.state.boSliderValue}px 515px`}}>
+          <div 
+            className={!this.state.heHidden ? 'head' : ""} 
+            style={{
+              pointerEvents: 'none', 
+              backgroundImage: `url(${this.state.characters[this.state.currentCharacter].appliedHeads})`}}>
 
           </div>
-          <div className={!this.state.heHidden ? 'head' : ""} style={{backgroundImage: `url(${this.state.appliedHeads})`}}>
+          <div 
+            className='mask' 
+            style={{
+              pointerEvents: 'none', 
+              backgroundImage: `url(${this.state.characters[this.state.currentCharacter].appliedMasks.url})`}}>
 
           </div>
-          <div className='mask' style={{backgroundImage: `url(${this.state.appliedMasks.url})`}}>
+          <div 
+            className='hair' 
+            style={{
+              pointerEvents: 'none', 
+              backgroundImage: `url(${this.state.characters[this.state.currentCharacter].appliedHair.url})`}}>
 
           </div>
-          <div className='hair' style={{backgroundImage: `url(${this.state.appliedHair.url})`}}>
+          <div 
+            className={!this.state.characters[this.state.currentCharacter].eyHidden ? 'eyes' : ""} 
+            style={{
+              pointerEvents: 'none', 
+              backgroundImage: `url(${this.state.characters[this.state.currentCharacter].appliedEyes.url})`, 
+              top: `${this.state.characters[this.state.currentCharacter].eySliderValue}px`}}>
 
           </div>
-          <div className={!this.state.eyHidden ? 'eyes' : ""} style={{backgroundImage: `url(${this.state.appliedEyes.url})`, top: `${this.state.eySliderValue}px`}}>
+          <div 
+            className={!this.state.characters[this.state.currentCharacter].moHidden ? 'mouth' : ""} 
+            style={{
+              pointerEvents: 'none',
+              backgroundImage: `url(${this.state.characters[this.state.currentCharacter].appliedMouths.url})`, 
+              top: `${this.state.characters[this.state.currentCharacter].moSliderValue}px`}}>
 
           </div>
-          <div className={!this.state.moHidden ? 'mouth' : ""} style={{backgroundImage: `url(${this.state.appliedMouths.url})`, top: `${this.state.moSliderValue}px`}}>
+          <div 
+            className='brows' 
+            style={{
+              pointerEvents: 'none', 
+              backgroundImage: `url(${this.state.characters[this.state.currentCharacter].appliedBrows.url})`, 
+              top: `${this.state.characters[this.state.currentCharacter].brSliderValue}px`}}>
 
           </div>
-          <div className='brows' style={{backgroundImage: `url(${this.state.appliedBrows.url})`, top: `${this.state.brSliderValue}px`}}>
+          <div 
+            className='hat' 
+            style={{
+              pointerEvents: 'none', 
+              backgroundImage: `url(${this.state.characters[this.state.currentCharacter].appliedHats.url})`}}>
 
           </div>
-          <div className='hat' style={{backgroundImage: `url(${this.state.appliedHats.url})`}}>
+          <div 
+            className='beard' 
+            style={{
+              pointerEvents: 'none', 
+              backgroundImage: `url(${this.state.characters[this.state.currentCharacter].appliedBeard.url})`}}>
 
           </div>
-          <div className='beard' style={{backgroundImage: `url(${this.state.appliedBeard.url})`}}>
+          <div 
+            className='boobs' 
+            style={{
+              pointerEvents: 'none', 
+              backgroundImage: `url(${this.state.characters[this.state.currentCharacter].appliedBoobs.url})`}}>
 
           </div>
-          <div className='boobs' style={{backgroundImage: `url(${this.state.appliedBoobs.url})`}}>
-
-          </div>
-          <div className='glasses' style={{backgroundImage: `url(${this.state.appliedGlasses.url})`}}>
+          <div 
+            className='glasses' 
+            style={{
+              pointerEvents: 'none', 
+              backgroundImage: `url(${this.state.characters[this.state.currentCharacter].appliedGlasses.url})`}}>
 
           </div>
         </div>
-        <div className={!this.state.formData.text ? "" : 'pointer'}>
+        <div className={!this.state.formData.text ? "" : 'pointer'} style={{pointerEvents: 'none'}}>
 
         </div>
-        <div className='characterText' ref='text' style={{top: `${100-this.state.textHeight}px`}}>
+        <div 
+          className='characterText' 
+          ref='text' 
+          style={{
+            top: `${100-this.state.textHeight}px`, 
+            color: 'black', 
+            fontSize: '18px'
+          }}
+        >
           {this.state.formData.text}
         </div>
-        <input maxLength='100' ref="field" onChange={this.handleChange} name='text' className="input is-small input-width charInput" type="text" placeholder="Реплика персонажа" />
+        <input 
+          maxLength='100' 
+          ref="field" 
+          onChange={this.handleChange} 
+          name='text' 
+          className="input is-small input-width charInput" 
+          type="text" 
+          placeholder="Реплика персонажа" 
+        />
+        <button style={{zIndex: '7'}}>X</button>
         <div  className="controlPanel" onClick={this.closeBgDropdown}>
           <div>
             <div className="dropdown">
-              <button onClick={this.toggleDropdown} className="dropbtn">{this.state.dropdownBtnText}&nbsp;&nbsp; <i className="fas fa-caret-down"></i></button>
+              <button  
+                onClick={this.toggleDropdown} 
+                className="dropbtn">{this.state.dropdownBtnText}&nbsp;&nbsp; 
+                <i className="fas fa-caret-down"></i>
+              </button>
               <div id="myDropdown" className={` ${this.state.showDropdown ? 'openDropdown' : 'hideDropdown'}`}>
                 <a href="#"
                   onClick={this.switchControlPanelTab}
@@ -728,13 +898,22 @@ class Game extends React.Component {
               <div className="faceBtns">
                 <button
                   onClick={this.switchFaceTab}
-                  className={this.state.faceButtonsText === 'Глаза' ? "extradropbtnActive" : "extradropbtn"} name="Глаза">Глаза</button>
+                  className={this.state.faceButtonsText === 'Глаза' ? "extradropbtnActive" : "extradropbtn"} 
+                  name="Глаза">
+                  Глаза
+                </button>
                 <button
                   onClick={this.switchFaceTab}
-                  className={this.state.faceButtonsText === 'Рот' ? "extradropbtnActive" : "extradropbtn"} name="Рот">Рот</button>
+                  className={this.state.faceButtonsText === 'Рот' ? "extradropbtnActive" : "extradropbtn"} 
+                  name="Рот">
+                  Рот
+                </button>
                 <button
                   onClick={this.switchFaceTab}
-                  className={this.state.faceButtonsText === 'Брови' ? "extradropbtnActive" : "extradropbtn"} name="Брови">Брови</button>
+                  className={this.state.faceButtonsText === 'Брови' ? "extradropbtnActive" : "extradropbtn"} 
+                  name="Брови">
+                  Брови
+                </button>
               </div >
               <div className={this.state.faceButtonsText === 'Глаза' ? 'showTab' : 'hideTab'}>
                 <div className="sliderContainer">
@@ -744,7 +923,7 @@ class Game extends React.Component {
                   min="-15"
                   max="15"
                   className="slider"
-                  value={this.state.eySliderValue}
+                  value={this.state.characters[this.state.currentCharacter].eySliderValue}
                   id="eyesRange"
                   step="5"
                   onChange={this.handleEyesSliderChange} />
@@ -759,7 +938,7 @@ class Game extends React.Component {
                   min="-15"
                   max="15"
                   className="slider"
-                  value={this.state.moSliderValue}
+                  value={this.state.characters[this.state.currentCharacter].moSliderValue}
                   id="eyesRange"
                   step="5"
                   onChange={this.handleMouthSliderChange} />
@@ -770,14 +949,15 @@ class Game extends React.Component {
                 <div className="sliderContainer">
                   <h1>Положение бровей</h1>
                   <input
-                  type="range"
-                  min="-15"
-                  max="15"
-                  className="slider"
-                  value={this.state.brSliderValue}
-                  id="eyesRange"
-                  step="5"
-                  onChange={this.handleBrowsSliderChange} />
+                    type="range"
+                    min="-15"
+                    max="15"
+                    className="slider"
+                    value={this.state.characters[this.state.currentCharacter].brSliderValue}
+                    id="eyesRange"
+                    step="5"
+                    onChange={this.handleBrowsSliderChange} 
+                  />
                 </div>
                 {this.setBrowsButtons()}
               </div>
@@ -786,14 +966,15 @@ class Game extends React.Component {
               <div className="sliderContainer">
                 <h1>Размер тушки</h1>
                 <input
-                type="range"
-                min="350"
-                max="450"
-                className="slider"
-                value={this.state.boSliderValue}
-                id="eyesRange"
-                step="5"
-                onChange={this.handleBodySliderChange} />
+                  type="range"
+                  min="350"
+                  max="450"
+                  className="slider"
+                  value={this.state.characters[this.state.currentCharacter].boSliderValue}
+                  id="eyesRange"
+                  step="5"
+                  onChange={this.handleBodySliderChange} 
+                />
               </div>
               <br />
               <h1>Руки</h1>

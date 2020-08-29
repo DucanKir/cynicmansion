@@ -50,15 +50,10 @@ class Navbar extends React.Component {
 
               <Link to="/" className="navbar-brand">
                 <div className="navbar-item title">
-                Home
+                Циничный Редактор
                 </div>
               </Link>
-              <Link to="/platforms" className="navbar-item">
-                Platforms
-              </Link>
-              <Link to="/about" className="navbar-item">
-                About
-              </Link>
+              
             </div>
 
             <div className="navbar-end">
