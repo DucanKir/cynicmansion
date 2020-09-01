@@ -42,6 +42,7 @@ class Game extends React.Component {
       currentCharacter: '',
       characters: '',
       textHeight: 0,
+      resetOpen: false,
     }
 
     this.startGame = this.startGame.bind(this)
