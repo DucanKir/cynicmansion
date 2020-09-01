@@ -199,6 +199,9 @@ body{
 .dropbtnBg:hover {
   background-color: #d3d3d3;
 }
+.chooseBkgrButton:hover {
+  background-color: #d3d3d3;
+}
 
 .extradropbtn {
   width: calc(100%/3);
@@ -230,6 +233,9 @@ body{
   outline:none;
 }
 .extradropbtn:focus {
+  outline:none;
+}
+.chooseBkgrButton:focus {
   outline:none;
 }
 
@@ -578,4 +584,10 @@ body{
 
 .fas {
   font-size: 20px;
+}
+
+.charsList {
+  position: absolute;
+  top: -24px;
+  left: -660px;
 }

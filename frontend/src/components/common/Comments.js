@@ -65,7 +65,6 @@ class Navbar extends React.Component {
 
 
   render() {
-    console.log(this.state.comments)
     return (
       <div>
         <div className="container">

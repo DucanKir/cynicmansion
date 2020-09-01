@@ -76,6 +76,10 @@ class Game extends React.Component {
     this.resetPart = this.resetPart.bind(this)
     this.setBackgroundDropdown = this.setBackgroundDropdown.bind(this)
     this.takePicture = this.takePicture.bind(this)
+    this.listChars = this.listChars.bind(this)
+    this.newCharacter = this.newCharacter.bind(this)
+    this.chooseCharacter = this.chooseCharacter.bind(this)
+    this.deleteCharacter = this.deleteCharacter.bind(this)
   }
 
   createCharacter() {
@@ -622,7 +626,7 @@ class Game extends React.Component {
   }
 
   handleChange(e) {
-    const formData = { ...this.state.formData, [e.target.name]: e.target.value }
+    let formData = { ...this.state.formData, [e.target.name]: e.target.value }
     this.setState({ formData })
   }
 
@@ -673,7 +677,6 @@ class Game extends React.Component {
     }
     let character = {...this.state.characters[this.state.currentCharacter], ...returnObj}
     const characters = {...this.state.characters, [this.state.currentCharacter]: character}
-    console.log(this.state.characters)
     this.setState({characters})
   }
 
@@ -698,6 +701,57 @@ class Game extends React.Component {
     })
   }
 
+  listChars() {
+    let listOfChars = Object.entries(this.state.characters)
+
+    return(
+      <div>
+        {listOfChars.map(char =>
+          <div
+          key={char[0]}
+          className='hairButton'
+          onClick={(e) => this.chooseCharacter(e)}
+          style={this.state.currentCharacter === char[0] ? {backgroundColor: 'grey'} : {backgroundColor: 'white'}}
+          id={char[0]}
+          style={{zIndex: '5',backgroundImage: `url(${char[1].appliedMasks.url}), url(${char[1].appliedHats.url}), url(${char[1].appliedGlasses.url}), url(${char[1].appliedEyes.url}), url(${char[1].appliedMouths.url}), url(${char[1].appliedBrows.url}), url(${char[1].appliedHair.url}),  url(https://s3.eu-west-2.amazonaws.com/cynic.game.images/Head1.png)`}}
+          >
+            x
+          </div>
+        )}
+      </div>
+    )
+  }
+
+  newCharacter() {
+    let listOfChars = Object.entries(this.state.characters)
+    if(listOfChars.length < 6) {
+    const newChars = this.createCharacter()
+    this.setState({ characters: newChars})
+    } else {
+      let formData = { ...this.state.formData, text: 'Хватит с тебя'}
+      this.setState({ formData })
+    }
+  }
+
+  chooseCharacter(e) {
+    this.setState({currentCharacter: e.target.id})
+  }
+
+  deleteCharacter() {
+    let characters = {}
+    Object.assign(characters, this.state.characters)
+    if(Object.keys(characters).length> 1) {
+      delete characters[this.state.currentCharacter]
+      let listOfChars = Object.entries(characters)
+      this.setState({characters, currentCharacter: listOfChars[0][0]})
+    } else {
+      let formData = { ...this.state.formData, text: 'Нельзя удалить единственного персонажа'}
+      this.setState({ formData })
+    }
+    
+
+  }
+
   render(){
     if (!this.state.backgrounds[0] || !this.state.gameStart || this.state.characters === {}) {
       console.log()
@@ -712,7 +766,6 @@ class Game extends React.Component {
       )
     }
 
-    console.log(this.state.characters[this.state.currentCharacter].appliedClothes.url)
 
     return (
       <div  
@@ -739,7 +792,9 @@ class Game extends React.Component {
             </button>
           </div>
           <button className='chooseBkgrButton' onClick={this.nextBackground}>Сюда</button>
+          
         </div>
+        
         <div className='back' 
           onClick={this.closeDropdown} 
           style={{pointerEvents: 'none', backgroundImage: `url(${this.state.addBkgr})`}}
@@ -868,9 +923,18 @@ class Game extends React.Component {
           type="text" 
           placeholder="Реплика персонажа" 
         />
-        <button onClick={this.setDefaultBody} style={{zIndex: '7', position: 'absolute', top: '25px', right: '350px'}}>Вернуть все в зад</button>
+        
+
+        <button className='chooseBkgrButton' onClick={this.setDefaultBody} style={{zIndex: '7', position: 'absolute', top: '19px', left: '100px', fontSize: '12px', padding: '3px', height: 'auto', width: '140px'}}>Вернуть все в зад</button>
+        <button className='chooseBkgrButton' onClick={this.newCharacter} style={{zIndex: '7', position: 'absolute', top: '44px', left: '100px', fontSize: '12px', padding: '3px', height: 'auto', width: '140px'}}>Добавить персонажа</button>
+        <button className='chooseBkgrButton' onClick={this.deleteCharacter} style={{zIndex: '7', position: 'absolute', top: '69px', left: '100px', fontSize: '12px', padding: '3px', height: 'auto', width: '140px'}}>Удалить персонажа</button>
+
         <div  className="controlPanel" onClick={this.closeBgDropdown}>
+          
           <div>
+            <div className="charsList">
+              {this.listChars()}
+            </div>
             <div className="dropdown">
               <button  
                 onClick={this.toggleDropdown} 
