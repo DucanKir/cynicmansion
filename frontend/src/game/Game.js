@@ -69,10 +69,7 @@ class Game extends React.Component {
     this.setMasksButtons = this.setMasksButtons.bind(this)
     this.handleChange = this.handleChange.bind(this)
     this.applyBodyPart = this.applyBodyPart.bind(this)
-    this.handleEyesSliderChange = this.handleEyesSliderChange.bind(this)
-    this.handleMouthSliderChange = this.handleMouthSliderChange.bind(this)
-    this.handleBrowsSliderChange = this.handleBrowsSliderChange.bind(this)
-    this.handleBodySliderChange = this.handleBodySliderChange.bind(this)
+    this.handleSliderChange = this.handleSliderChange.bind(this)
     this.sortBodyImages = this.sortBodyImages.bind(this)
     this.setDefaultBody = this.setDefaultBody.bind(this)
     this.resetPart = this.resetPart.bind(this)
@@ -217,7 +214,35 @@ class Game extends React.Component {
     )
   }
   setDefaultBody() {
-    this.setState({...this.state.character0, character0: {appliedHands: this.state.hands[0]}})
+    let returnObj = {
+      appliedBeard: {url: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/Non.png'},
+      appliedBoobs:  {url: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/Non.png'},
+      appliedBrows:  {url: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/Non.png'},
+      appliedClothes: {url: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/Body.png'},
+      appliedEyes: {url: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/Eyes0.png'},
+      appliedGlasses:  {url: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/Non.png'},
+      appliedHair:  {url: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/Non.png'},
+      appliedHands: {url: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/Hands1.png'},
+      appliedHats:  {url: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/Non.png'},
+      appliedHeads: {url: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/Head1.png'},
+      appliedLegs: {url: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/Legs2_0.png'},
+      appliedMasks:  {url: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/Non.png'},
+      appliedMouths: {url: 'https://s3.eu-west-2.amazonaws.com/cynic.game.images/Mouth6.png'},
+      heHidden: false,
+      haHidden: false,
+      leHidden: false,
+      eyHidden: false,
+      moHidden: false,
+      brHidden: false,
+      clZindex: 0,
+      eySliderValue: 0,
+      moSliderValue: 0,
+      brSliderValue: 0,
+      boSliderValue: 400,
+    }
+    let character = {...this.state.characters[this.state.currentCharacter], ...returnObj}
+    const characters = {...this.state.characters, [this.state.currentCharacter]: character}
+    this.setState({characters})
   }
 
   componentDidMount(){
@@ -656,23 +681,8 @@ class Game extends React.Component {
     this.setState({...this.state.character0, character0: {[e.target.id]: '', eyHidden: false, moHidden: false, brHidden: false, heHidden: false}})
   }
 
-  handleEyesSliderChange(e) {
-    let character = {...this.state.characters[this.state.currentCharacter], eySliderValue: e.target.value}
-    let characters = {...this.state.characters, [this.state.currentCharacter]: character}
-    this.setState({characters})
-  }
-  handleBrowsSliderChange(e) {
-    let character = {...this.state.characters[this.state.currentCharacter], brSliderValue: e.target.value}
-    let characters = {...this.state.characters, [this.state.currentCharacter]: character}
-    this.setState({characters})
-  }
-  handleMouthSliderChange(e) {
-    let character = {...this.state.characters[this.state.currentCharacter], moSliderValue: e.target.value}
-    let characters = {...this.state.characters, [this.state.currentCharacter]: character}
-    this.setState({characters})
-  }
-  handleBodySliderChange(e) {
-    let character = {...this.state.characters[this.state.currentCharacter], boSliderValue: e.target.value}
+  handleSliderChange(e) {
+    let character = {...this.state.characters[this.state.currentCharacter], [e.target.id]: e.target.value}
     let characters = {...this.state.characters, [this.state.currentCharacter]: character}
     this.setState({characters})
   }
@@ -857,7 +867,7 @@ class Game extends React.Component {
           type="text" 
           placeholder="Реплика персонажа" 
         />
-        <button style={{zIndex: '7'}}>X</button>
+        <button onClick={this.setDefaultBody} style={{zIndex: '7', position: 'absolute', top: '25px', right: '350px'}}>Вернуть все в зад</button>
         <div  className="controlPanel" onClick={this.closeBgDropdown}>
           <div>
             <div className="dropdown">
@@ -924,9 +934,9 @@ class Game extends React.Component {
                   max="15"
                   className="slider"
                   value={this.state.characters[this.state.currentCharacter].eySliderValue}
-                  id="eyesRange"
+                  id="eySliderValue"
                   step="5"
-                  onChange={this.handleEyesSliderChange} />
+                  onChange={this.handleSliderChange} />
                 </div>
                 {this.setEyesButtons()}
               </div>
@@ -939,9 +949,9 @@ class Game extends React.Component {
                   max="15"
                   className="slider"
                   value={this.state.characters[this.state.currentCharacter].moSliderValue}
-                  id="eyesRange"
+                  id="moSliderValue"
                   step="5"
-                  onChange={this.handleMouthSliderChange} />
+                  onChange={this.handleSliderChange} />
                 </div>
                 {this.setMouthButtons()}
               </div>
@@ -954,9 +964,9 @@ class Game extends React.Component {
                     max="15"
                     className="slider"
                     value={this.state.characters[this.state.currentCharacter].brSliderValue}
-                    id="eyesRange"
+                    id="brSliderValue"
                     step="5"
-                    onChange={this.handleBrowsSliderChange} 
+                    onChange={this.handleSliderChange} 
                   />
                 </div>
                 {this.setBrowsButtons()}
@@ -971,9 +981,9 @@ class Game extends React.Component {
                   max="450"
                   className="slider"
                   value={this.state.characters[this.state.currentCharacter].boSliderValue}
-                  id="eyesRange"
+                  id="boSliderValue"
                   step="5"
-                  onChange={this.handleBodySliderChange} 
+                  onChange={this.handleSliderChange} 
                 />
               </div>
               <br />
