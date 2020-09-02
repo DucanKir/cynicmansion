@@ -23,6 +23,7 @@ class Game extends React.Component {
       appliedBackground: '',
       beards: [],
       boobs: [],
+      body: [],
       brows: [],
       clothes: [],
       eyes: [],
@@ -84,6 +85,7 @@ class Game extends React.Component {
     this.chooseCharacter = this.chooseCharacter.bind(this)
     this.deleteCharacter = this.deleteCharacter.bind(this)
     this.setMishanya = this.setMishanya.bind(this)
+    this.setText = this.setText.bind(this)
   }
 
   startGame() {
@@ -239,16 +241,7 @@ class Game extends React.Component {
     const characters = this.createCharacter()
     this.setState({characters})
     } else {
-      let formData = { ...this.state.formData, text: 'Хватит с тебя'}
-      this.setState({ formData })
-      setTimeout(
-        function() {
-          let formData = { ...this.state.formData, text: this.state.buffer}
-          this.setState({ formData });
-        }
-        .bind(this),
-        800
-    );
+      this.setText('Хватит с тебя')
     }
   }
 
@@ -264,16 +257,8 @@ class Game extends React.Component {
       let listOfChars = Object.entries(characters)
       this.setState({characters, currentCharacter: listOfChars[0][0]})
     } else {
-      let formData = { ...this.state.formData, text: 'Нельзя удалить единственного персонажа'}
-      this.setState({ formData })
-      setTimeout(
-        function() {
-          let formData = { ...this.state.formData, text: this.state.buffer}
-          this.setState({ formData });
-        }
-        .bind(this),
-        800
-    );
+      this.setText('Нельзя удалить единственного персонажа')
+      
     }
     
 
@@ -301,6 +286,7 @@ class Game extends React.Component {
         beards: this.sortImages(res.data, 'Beard'),
         boobs: this.sortImages(res.data, 'Boo'),
         brows: this.sortImages(res.data, 'Brow'),
+        body: this.sortImages(res.data, 'Bod'),
         clothes: this.sortImages(res.data, 'Clot'),
         eyes: this.sortImages(res.data, 'Eye'),
         glasses: this.sortImages(res.data, 'Glass'),
@@ -359,7 +345,7 @@ class Game extends React.Component {
 
   sortBodyImages(array) {
     array.sort((a, b) => {
-      return +(a.name.split('_')[1]) - +(b.name.split('_')[1])
+      return +(a.name.replace(/[^0-9]/g, '')) - +(b.name.replace(/[^0-9]/g, ''))
     })
   }
 
@@ -393,8 +379,8 @@ class Game extends React.Component {
         <div
           className='browsButton'
           onClick={this.resetPart}
-          id='appliedBrows'>
-          <i style={{pointerEvents: 'none'}} className="fas fa-times clear"></i>
+          id='appliedBrows'style={{fontSize: '35px'}}>
+          X
         </div>
         {images.map(image =>
           <div
@@ -483,8 +469,9 @@ class Game extends React.Component {
         <div
           className='boobsButton'
           onClick={this.resetPart}
-          id='appliedBoobs'>
-          <i style={{pointerEvents: 'none'}} className="fas fa-times clear"></i>
+          id='appliedBoobs'
+          style={{fontSize: '35px'}}>
+          X
         </div>
         {images.map(image =>
           <div
@@ -507,6 +494,15 @@ class Game extends React.Component {
 
     return(
       <div className='buttonsContainer'>
+        <div
+          className='boobsButton'
+          onClick={this.applyBodyPart}
+          id='Body'
+          className='clothesButton'
+          name='appliedClothes'
+          style={{backgroundImage: `url(/api/images/Head1.png), url(/api/images/Hands1.png), url(/api/images/Body), url(/api/images/Legs2_0.png)`}}>
+          
+        </div>
         {images.map(image =>
           <div
           key={image.id}
@@ -544,8 +540,9 @@ class Game extends React.Component {
         <div
           className='hairButton'
           onClick={this.resetPart}
-          id='appliedHair'>
-          <i style={{pointerEvents: 'none'}} className="fas fa-times clear"></i>
+          id='appliedHair'
+          style={{fontSize: '35px'}}>
+          X
         </div>
         {images.map(image =>
           <div
@@ -571,8 +568,9 @@ class Game extends React.Component {
         <div
           className='hairButton'
           onClick={this.resetPart}
-          id='appliedBeard'>
-          <i style={{pointerEvents: 'none'}} className="fas fa-times clear"></i>
+          id='appliedBeard'
+          style={{fontSize: '35px'}}>
+          X
         </div>
         {images.map(image =>
           <div
@@ -597,8 +595,9 @@ class Game extends React.Component {
         <div
           className='hairButton'
           onClick={this.resetPart}
-          id='appliedGlasses'>
-          <i style={{pointerEvents: 'none'}} className="fas fa-times clear"></i>
+          id='appliedGlasses'
+          style={{fontSize: '35px'}}>
+          X
         </div>
         {images.map(image =>
           <div
@@ -624,8 +623,9 @@ class Game extends React.Component {
         <div
           className='hairButton'
           onClick={this.resetPart}
-          id='appliedHats'>
-          <i style={{pointerEvents: 'none'}} className="fas fa-times clear"></i>
+          id='appliedHats'
+          style={{fontSize: '35px'}}>
+          X
         </div>
         {images.map(image =>
           <div
@@ -650,8 +650,9 @@ class Game extends React.Component {
         <div
           className='hairButton'
           onClick={this.resetPart}
-          id='appliedMasks'>
-          <i style={{pointerEvents: 'none'}} className="fas fa-times clear"></i>
+          id='appliedMasks'
+          style={{fontSize: '35px'}}>
+          X
         </div>
         {images.map(image =>
           <div
@@ -668,9 +669,25 @@ class Game extends React.Component {
     )
   }
 
+  // character text coming from form
   handleChange(e) {
     let formData = { ...this.state.formData, [e.target.name]: e.target.value }
     this.setState({ formData, buffer:  e.target.value})
+  }
+
+  
+  // character speaking
+  setText(text) {
+    let formData = { ...this.state.formData, text: text}
+      this.setState({ formData })
+      setTimeout(
+        function() {
+          let formData = { ...this.state.formData, text: this.state.buffer}
+          this.setState({ formData });
+        }
+        .bind(this),
+        1500
+    );
   }
 
   applyBodyPart(e) {
@@ -683,10 +700,20 @@ class Game extends React.Component {
     let targetState =''
 
     Object.keys(this.state).filter (key => {
-      if(key.includes(pattern)) {
+      if(key.includes(pattern, 'bod')) {
         targetState = key
       }
     })
+    
+    if (imgName == 'Boobs4') {
+      this.setText('Три сиськи? Зачетно!')
+    }
+    if (imgName == 'Mouth12') {
+      this.setText('Чтооо за нааахуй?!')
+    }
+    if (imgName == 'Clothes_77') {
+      this.setText('ГДЕ ДЕТОНАТОР?')
+    }
 
     this.state[targetState].filter(obj => {
       if(obj.name == imgName){
@@ -713,7 +740,7 @@ class Game extends React.Component {
       } else if (position == 4) {
         returnObj = {...returnObj, eyHidden: true, moHidden: true, brHidden: true, heHidden: true}
       }else if (position == 5) {
-        returnObj = {...returnObj, eyHidden: false, moHidden: true, true: false, heHidden: true}
+        returnObj = {...returnObj, eyHidden: false, moHidden: true, brHidden: false, heHidden: true}
       } else {
         returnObj = {...returnObj, eyHidden: false, moHidden: false, brHidden: false, heHidden: false}
       }
@@ -724,8 +751,9 @@ class Game extends React.Component {
   }
 
   resetPart(e){
-
-    this.setState({...this.state.character0, character0: {[e.target.id]: '', eyHidden: false, moHidden: false, brHidden: false, heHidden: false}})
+    let character = {...this.state.characters[this.state.currentCharacter], [e.target.id]: ''}
+    let characters = {...this.state.characters, [this.state.currentCharacter]: character}
+    this.setState({characters})
   }
 
   handleSliderChange(e) {
@@ -758,9 +786,8 @@ class Game extends React.Component {
           key={char[0]}
           className='hairButton'
           onClick={(e) => this.chooseCharacter(e)}
-          style={this.state.currentCharacter === char[0] ? {backgroundColor: 'grey'} : {backgroundColor: 'white'}}
           id={char[0]}
-          style={{zIndex: '5',backgroundImage: `url(/api/images/${char[1].appliedMasks.name}), url(/api/images/${char[1].appliedBeard.name}), url(/api/images/${char[1].appliedHats.name}), url(/api/images/${char[1].appliedGlasses.name}), url(/api/images/${char[1].appliedEyes.name}), url(/api/images/${char[1].appliedMouths.name}), url(/api/images/${char[1].appliedBrows.name}), url(/api/images/${char[1].appliedHair.name}),  url(api/images/Head1.png), url(/api/images/${char[1].appliedClothes.name})`}}
+          style={{backgroundColor: 'white', zIndex: '5',backgroundImage: `url(/api/images/${char[1].appliedMasks.name}), url(/api/images/${char[1].appliedBeard.name}), url(/api/images/${char[1].appliedHats.name}), url(/api/images/${char[1].appliedGlasses.name}), url(/api/images/${char[1].appliedEyes.name}), url(/api/images/${char[1].appliedMouths.name}), url(/api/images/${char[1].appliedBrows.name}), url(/api/images/${char[1].appliedHair.name}),  url(api/images/Head1.png), url(/api/images/${char[1].appliedClothes.name})`}}
           ></div>
         )}
       </div>
@@ -786,6 +813,7 @@ class Game extends React.Component {
 
     return (
       <div id="capture" 
+      
         className="gamefield" 
         style={{ 
           marginTop: '5px', 
@@ -799,13 +827,13 @@ class Game extends React.Component {
           <div className="dropdown">
             <div 
               id="myDropdown" 
-              className={this.state.showBgDropdown ? 'openBgDropdown scrollboxBG' : 'hideBgDropdown'}
+              className={this.state.showBgDropdown ? 'openBgDropdown ' : 'hideBgDropdown'}
             >
             {this.setBackgroundDropdown()}
             </div>
             <button onClick={this.toggleBgDropdown} className="dropbtnBg">
               Выбрать фон&nbsp;&nbsp; 
-              <i className="fas fa-caret-down"></i>
+              <span style={{fontSize: '35px', marginTop: '10px'}}>^</span>
             </button>
           </div>
           <button className='chooseBkgrButton' onClick={this.nextBackground}>Сюда</button>
@@ -923,7 +951,11 @@ class Game extends React.Component {
         <div 
           className='characterText' 
           ref='text' 
-          style={{
+          style={this.state.backgrounds[this.state.backgrCount].name == 'Backgr2' || this.state.backgrounds[this.state.backgrCount].name == 'Backgr5' ? {
+            top: `${100-this.state.textHeight}px`, 
+            color: 'white', 
+            fontSize: '18px'
+          }:{
             top: `${100-this.state.textHeight}px`, 
             color: 'black', 
             fontSize: '18px'
@@ -956,8 +988,8 @@ class Game extends React.Component {
             <div className="dropdown">
               <button  
                 onClick={this.toggleDropdown} 
-                className="dropbtn">{this.state.dropdownBtnText}&nbsp;&nbsp; 
-                <i className="fas fa-caret-down"></i>
+                className="dropbtn">{this.state.dropdownBtnText}&nbsp;&nbsp; &nbsp;&nbsp; 
+                 <span style={{fontSize: '16px', fontWeight: '600'}}>V</span>
               </button>
               <div id="myDropdown" className={` ${this.state.showDropdown ? 'openDropdown' : 'hideDropdown'}`}>
                 <a href="#"
