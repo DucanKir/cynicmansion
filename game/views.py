@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
-from django.http import Http404
+from django.http import Http404, HttpResponse
 from .permissions import IsOwnerOrReadOnly
 
 from .serializers import PopulatedImageSerializer, PopulatedCommentSerializer
@@ -22,20 +22,27 @@ class ImageDetail(APIView):
 
     permission_classes = (IsOwnerOrReadOnly,)
 
-    def get_image(self, pk):
+    def get_image(self, name):
         try:
-            image = Image.objects.get(pk=pk)
+            image = Image.objects.get(name=name)
         except Image.DoesNotExist:
             raise Http404
 
         return image
 
-    def get(self, _request, pk):
-        image = self.get_image(pk)
-        serializer = PopulatedImageSerializer(image)
-        return Response(serializer.data)
+    def get(self, _request, name):
+        if name.lower().endswith('.png'):
+            name = name[:-4]
+            
+        image = self.get_image(name=name)
+        
+        response = HttpResponse(image.data, content_type='image/png')
+        response['Content-Disposition'] = 'inline; filename=' + image.name + '.png'
+        return response
+
 
     def put(self, request, pk):
+        raise NotImplementedError()
         image = self.get_image(pk)
         serializer = PopulatedImageSerializer(image, data=request.data)
         if serializer.is_valid():
@@ -45,6 +52,7 @@ class ImageDetail(APIView):
         return Response(serializer.errors, status=422)
 
     def delete(self, _request, pk):
+        raise NotImplementedError()
         image = self.get_image(pk)
         image.delete()
         return Response(status=204)

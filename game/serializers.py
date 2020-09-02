@@ -7,7 +7,7 @@ class PopulatedImageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Image
-        fields = ('id', 'name', 'user', 'url', 'position')
+        fields = ('id', 'name', 'user', 'position')
 
 class ImageDeserializer(serializers.ModelSerializer):
 

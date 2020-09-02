@@ -151,5 +151,8 @@ REST_REGISTRATION = {
 DISQUS_API_KEY = 'u62qczQRmN3s9f3GSOoFitlJjLAsYWCHgbQ5DRFKwm3vFeqQMlHdXTDgqg7Dl71a'
 DISQUS_WEBSITE_SHORTNAME = 'Cynic Editor'
 
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+AWS_STORAGE_BUCKET_NAME = 'cynic.game.images'
+
 # Activate Django-Heroku.
 django_heroku.settings(locals())

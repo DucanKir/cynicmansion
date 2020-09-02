@@ -116,11 +116,9 @@ body{
 .openBgDropdown {
   display: block;
   position: absolute;
-  min-width: 160px;
   z-index: 8;
   transition: all 2s ease-in;
   height: 300px;
-  overflow: scroll;
   bottom: 30px;
 
 
@@ -133,7 +131,7 @@ body{
 }
 
 .chooseBkgrButton {
-  z-index: 8;
+  z-index: 5;
   height: 25px;
   margin: 0 5px 0 5px;
   border: 3px solid black;
@@ -300,7 +298,6 @@ body{
   height: 70px;
   background-size: 500%;
   background-position: -123px -97px;
-  background-color: white;
   border: 3px solid black;
   margin: 8px;
   cursor: pointer;
@@ -311,7 +308,6 @@ body{
   height: 70px;
   background-size: 500%;
   background-position: -123px -85px;
-  background-color: white;
   border: 3px solid black;
   margin: 8px;
   cursor: pointer;
@@ -590,4 +586,65 @@ body{
   position: absolute;
   top: -24px;
   left: -660px;
+}
+
+.scrollbox {
+  z-index: 1;
+  overflow: auto;
+  width: 100%;
+  max-height: 94.5%;
+  background: #FFF no-repeat;
+  background-image: -webkit-radial-gradient(50% 0, farthest-side, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0)), -webkit-radial-gradient(50% 100%, farthest-side, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0));
+  background-image: -moz-radial-gradient(50% 0, farthest-side, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0)), -moz-radial-gradient(50% 100%, farthest-side, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0));
+  background-image: radial-gradient(farthest-side at 50% 0, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0)), radial-gradient(farthest-side at 50% 100%, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0));
+  background-position: 0 0, 0 100%;
+  background-size: 100% 14px;
+}
+
+.scrollbox:before,
+.scrollbox:after {
+  content: "";
+  z-index: -1;
+  display: block;
+  height: 30px;
+  margin: 0 0 -30px;
+  background: -webkit-linear-gradient(top, #FFF, #FFF 30%, rgba(255, 255, 255, 0));
+  background: -moz-linear-gradient(top, #FFF, #FFF 30%, rgba(255, 255, 255, 0));
+  background: linear-gradient(to bottom, #FFF, #FFF 30%, rgba(255, 255, 255, 0));
+}
+
+.scrollbox:after {
+  margin: -30px 0 0;
+  background: -webkit-linear-gradient(top, rgba(255, 255, 255, 0), #FFF 70%, #FFF);
+  background: -moz-linear-gradient(top, rgba(255, 255, 255, 0), #FFF 70%, #FFF);
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0), #FFF 70%, #FFF);
+}
+
+.scrollboxBG {
+  z-index: 5;
+  overflow: auto;
+  background-image: -webkit-radial-gradient(50% 0, farthest-side, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0)), -webkit-radial-gradient(50% 100%, farthest-side, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0));
+  background-image: -moz-radial-gradient(50% 0, farthest-side, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0)), -moz-radial-gradient(50% 100%, farthest-side, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0));
+  background-image: radial-gradient(farthest-side at 50% 0, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0)), radial-gradient(farthest-side at 50% 100%, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0));
+  background-position: 0 0, 0 100%;
+  background-size: 100% 14px;
+}
+
+.scrollboxBG:before,
+.scrollboxBG:after {
+  content: "";
+  z-index: -1;
+  display: block;
+  height: 30px;
+  margin: 0 0 -30px;
+  background: -webkit-linear-gradient(top, #FFF, #FFF 30%, rgba(255, 255, 255, 0));
+  background: -moz-linear-gradient(top, #FFF, #FFF 30%, rgba(255, 255, 255, 0));
+  background: linear-gradient(to bottom, #FFF, #FFF 30%, rgba(255, 255, 255, 0));
+}
+
+.scrollboxBG:after {
+  margin: -30px 0 0;
+  background: -webkit-linear-gradient(top, rgba(255, 255, 255, 0), #FFF 70%, #FFF);
+  background: -moz-linear-gradient(top, rgba(255, 255, 255, 0), #FFF 70%, #FFF);
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0), #FFF 70%, #FFF);
 }
