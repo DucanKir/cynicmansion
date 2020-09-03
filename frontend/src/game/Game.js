@@ -2,9 +2,12 @@ import React from 'react'
 import axios from 'axios'
 import htmlToImage from 'html-to-image'
 import {newCharact, mishanya, defaultCharacter} from '../components/common/characters'
+import Draggable from 'react-draggable';
+
 
 class Game extends React.Component {
 
+  //generating uuid for characters
   uuidv4() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
       var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
@@ -15,12 +18,12 @@ class Game extends React.Component {
   constructor() {
     super()
     this.state = {
+      level: 'createComics',
       gameStart: false,
       backgrCount: 0,
       backgrounds: [],
       additionalBackgrounds: [],
       addBkgr: '',
-      appliedBackground: '',
       beards: [],
       boobs: [],
       body: [],
@@ -45,9 +48,18 @@ class Game extends React.Component {
       buffer: '',
       currentCharacter: '',
       characters: '',
+      scenes: '',
       textHeight: 0,
       resetOpen: false,
+      activeDrags: 0,
+      deltaPosition: {
+        x: 0, y: 0
+      },
+      controlledPosition: {
+        x: -400, y: 200
     }
+    }
+    
 
     this.startGame = this.startGame.bind(this)
     this.sortImages = this.sortImages.bind(this)
@@ -86,12 +98,25 @@ class Game extends React.Component {
     this.deleteCharacter = this.deleteCharacter.bind(this)
     this.setMishanya = this.setMishanya.bind(this)
     this.setText = this.setText.bind(this)
+    this.changeLevel = this.changeLevel.bind(this)
+    this.onStart = this.onStart.bind(this)
+    this.onStop = this.onStop.bind(this)
+    this.adjustXPos = this.adjustXPos.bind(this)
+    this.adjustYPos = this.adjustYPos.bind(this)
+    this.onControlledDrag = this.onControlledDrag.bind(this)
+    this.onControlledDragStop = this.onControlledDragStop.bind(this)
+   
   }
 
   startGame() {
     let character = Object.keys(this.state.characters)
     this.setState({gameStart: true, currentCharacter: character})
     
+  }
+
+  //switch from character editor to comics editor and back
+  changeLevel(levelName) {
+    this.setState({level: levelName})
   }
 
   
@@ -329,7 +354,7 @@ class Game extends React.Component {
     this.setState({showBgDropdown: false  })
   }
 
-
+  //to choose category
   switchControlPanelTab(e) {
     this.setState({
       dropdownBtnText: e.target.name,
@@ -337,6 +362,7 @@ class Game extends React.Component {
     })
   }
 
+  //switching tabs eyes/mouth/brows
   switchFaceTab(e) {
     this.setState({
       faceButtonsText: e.target.name
@@ -750,8 +776,9 @@ class Game extends React.Component {
     this.setState({characters})
   }
 
+  // reset removes applied body part and sets everything as visible (for masks)
   resetPart(e){
-    let character = {...this.state.characters[this.state.currentCharacter], [e.target.id]: ''}
+    let character = {...this.state.characters[this.state.currentCharacter], [e.target.id]: '', eyHidden: false, moHidden: false, brHidden: false, heHidden: false}
     let characters = {...this.state.characters, [this.state.currentCharacter]: character}
     this.setState({characters})
   }
@@ -776,6 +803,27 @@ class Game extends React.Component {
   });
   }
 
+  setFirstScene() {
+    const firstScene = {
+      [this.uuidv4]: {
+        backgrounds: [],
+        characters: {},
+      }
+    }
+  }
+
+  chooseScene() {
+
+  }
+
+  addScene(){
+
+  }
+
+  deleteScene(){
+    
+  }
+
   listChars() {
     let listOfChars = Object.entries(this.state.characters)
 
@@ -790,13 +838,190 @@ class Game extends React.Component {
           style={{backgroundColor: 'white', zIndex: '5',backgroundImage: `url(/api/images/${char[1].appliedMasks.name}), url(/api/images/${char[1].appliedBeard.name}), url(/api/images/${char[1].appliedHats.name}), url(/api/images/${char[1].appliedGlasses.name}), url(/api/images/${char[1].appliedEyes.name}), url(/api/images/${char[1].appliedMouths.name}), url(/api/images/${char[1].appliedBrows.name}), url(/api/images/${char[1].appliedHair.name}),  url(api/images/Head1.png), url(/api/images/${char[1].appliedClothes.name})`}}
           ></div>
         )}
+       
       </div>
     )
   }
 
+  createBodyContainer() {
+    return (
+      <div className="bodyContainer" onClick={this.closeDropdown}>
+            <div 
+              className='clothes' 
+              style={{
+                pointerEvents: 'none', 
+                backgroundImage: `url(/api/images/${this.state.characters[this.state.currentCharacter].appliedClothes.name})`, 
+                zIndex: this.state.characters[this.state.currentCharacter].clZindex, 
+                backgroundSize: `${this.state.characters[this.state.currentCharacter].boSliderValue}px 515px`}}
+              >
+            </div>
+            <div 
+              className={!this.state.characters[this.state.currentCharacter].leHidden ? 'legs' : ""} 
+              style={{
+                pointerEvents: 'none', 
+                backgroundImage: `url(/api/images/${this.state.characters[this.state.currentCharacter].appliedLegs.name})`, 
+                backgroundSize: `${this.state.characters[this.state.currentCharacter].boSliderValue}px 515px`}}>
+
+            </div>
+            <div 
+              className={!this.state.characters[this.state.currentCharacter].haHidden ? 'hands' : ""} 
+              style={{
+                pointerEvents: 'none', 
+                backgroundImage: `url(/api/images/${this.state.characters[this.state.currentCharacter].appliedHands.name})`, 
+                backgroundSize: `${this.state.characters[this.state.currentCharacter].boSliderValue}px 515px`}}>
+
+            </div>
+            <div 
+              className={!this.state.heHidden ? 'head' : ""} 
+              style={{
+                pointerEvents: 'none', 
+                backgroundImage: `url(/api/images/${this.state.characters[this.state.currentCharacter].appliedHeads.name})`}}>
+
+            </div>
+            <div 
+              className='mask' 
+              style={{
+                pointerEvents: 'none', 
+                backgroundImage: `url(/api/images/${this.state.characters[this.state.currentCharacter].appliedMasks.name})`}}>
+
+            </div>
+            <div 
+              className='hair' 
+              style={{
+                pointerEvents: 'none', 
+                backgroundImage: `url(/api/images/${this.state.characters[this.state.currentCharacter].appliedHair.name})`}}>
+
+            </div>
+            <div 
+              className={!this.state.characters[this.state.currentCharacter].eyHidden ? 'eyes' : ""} 
+              style={{
+                pointerEvents: 'none', 
+                backgroundImage: `url(/api/images/${this.state.characters[this.state.currentCharacter].appliedEyes.name})`, 
+                top: `${this.state.characters[this.state.currentCharacter].eySliderValue}px`}}>
+
+            </div>
+            <div 
+              className={!this.state.characters[this.state.currentCharacter].moHidden ? 'mouth' : ""} 
+              style={{
+                pointerEvents: 'none',
+                backgroundImage: `url(/api/images/${this.state.characters[this.state.currentCharacter].appliedMouths.name})`, 
+                top: `${this.state.characters[this.state.currentCharacter].moSliderValue}px`}}>
+
+            </div>
+            <div 
+              className='brows' 
+              style={{
+                pointerEvents: 'none', 
+                backgroundImage: `url(/api/images/${this.state.characters[this.state.currentCharacter].appliedBrows.name})`, 
+                top: `${this.state.characters[this.state.currentCharacter].brSliderValue}px`}}>
+
+            </div>
+            <div 
+              className='hat' 
+              style={{
+                pointerEvents: 'none', 
+                backgroundImage: `url(/api/images/${this.state.characters[this.state.currentCharacter].appliedHats.name})`}}>
+
+            </div>
+            <div 
+              className='beard' 
+              style={{
+                pointerEvents: 'none', 
+                backgroundImage: `url(/api/images/${this.state.characters[this.state.currentCharacter].appliedBeard.name})`}}>
+
+            </div>
+            <div 
+              className='boobs' 
+              style={{
+                pointerEvents: 'none', 
+                backgroundImage: `url(/api/images/${this.state.characters[this.state.currentCharacter].appliedBoobs.name})`}}>
+
+            </div>
+            <div 
+              className='glasses' 
+              style={{
+                pointerEvents: 'none', 
+                backgroundImage: `url(/api/images/${this.state.characters[this.state.currentCharacter].appliedGlasses.name})`}}>
+
+            </div>
+            <div className='drag' style={{backgroundColor: 'rgba(0,0,0,0)', width: '220px', height: '330px', position: 'absolute', top: '120px', left: '80px', zIndex: 99}}></div>
+          </div>
+    )
+  }
+
+  createBackgroundsDropdown() {
+    return(
+      <div className='chooseBkgr'>
+            <button className='chooseBkgrButton' onClick={this.previousBackground}>Туда</button>
+
+            <div className="dropdown">
+              <div 
+                id="myDropdown" 
+                className={this.state.showBgDropdown ? 'openBgDropdown ' : 'hideBgDropdown'}
+              >
+              {this.setBackgroundDropdown()}
+              </div>
+              <button onClick={this.toggleBgDropdown} className="dropbtnBg">
+                Выбрать фон&nbsp;&nbsp; 
+                <span style={{fontSize: '35px', marginTop: '10px'}}>^</span>
+              </button>
+            </div>
+            <button className='chooseBkgrButton' onClick={this.nextBackground}>Сюда</button>
+            
+          </div>
+    )
+  }
+
+  handleDrag(e, ui) {
+    const {x, y} = this.state.deltaPosition;
+    this.setState({
+      deltaPosition: {
+        x: x + ui.deltaX,
+        y: y + ui.deltaY,
+      }
+    });
+  };
+
+  onStart() {
+    this.setState({activeDrags: ++this.state.activeDrags});
+  };
+
+  onStop () {
+    this.setState({activeDrags: --this.state.activeDrags});
+  };
+
+  // For controlled component
+  adjustXPos (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    const {x, y} = this.state.controlledPosition;
+    this.setState({controlledPosition: {x: x - 10, y}});
+  };
+
+  adjustYPos (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    const {controlledPosition} = this.state;
+    const {x, y} = controlledPosition;
+    this.setState({controlledPosition: {x, y: y - 10}});
+  };
+
+  onControlledDrag (e, position) {
+    const {x, y} = position;
+    this.setState({controlledPosition: {x, y}});
+  };
+
+  onControlledDragStop (e, position) {
+    this.onControlledDrag(e, position);
+    this.onStop();
+  };
+
   
 
   render(){
+    const dragHandlers = {onStart: this.onStart, onStop: this.onStop};
+    const {deltaPosition, controlledPosition} = this.state;
+
     if (!this.state.backgrounds[0] || !this.state.gameStart || this.state.characters === {}) {
       console.log()
       return (
@@ -820,150 +1045,21 @@ class Game extends React.Component {
           backgroundImage: `url(/api/images/${this.state.backgrounds[this.state.backgrCount].name})`
         }}
       >
-        
-        <div className='chooseBkgr'>
-          <button className='chooseBkgrButton' onClick={this.previousBackground}>Туда</button>
 
-          <div className="dropdown">
-            <div 
-              id="myDropdown" 
-              className={this.state.showBgDropdown ? 'openBgDropdown ' : 'hideBgDropdown'}
-            >
-            {this.setBackgroundDropdown()}
-            </div>
-            <button onClick={this.toggleBgDropdown} className="dropbtnBg">
-              Выбрать фон&nbsp;&nbsp; 
-              <span style={{fontSize: '35px', marginTop: '10px'}}>^</span>
-            </button>
-          </div>
-          <button className='chooseBkgrButton' onClick={this.nextBackground}>Сюда</button>
-          
-        </div>
-        
-        <div className='back' 
-          onClick={this.closeDropdown} 
-          style={{pointerEvents: 'none', backgroundImage: `url(/api/images/${this.state.addBkgr})`}}
-        >
-        </div>
-        <div className="bodyContainer" onClick={this.closeDropdown}>
-          <div 
-            className='clothes' 
-            style={{
-              pointerEvents: 'none', 
-              backgroundImage: `url(/api/images/${this.state.characters[this.state.currentCharacter].appliedClothes.name})`, 
-              zIndex: this.state.characters[this.state.currentCharacter].clZindex, 
-              backgroundSize: `${this.state.characters[this.state.currentCharacter].boSliderValue}px 515px`}}
-            >
-          </div>
-          <div 
-            className={!this.state.characters[this.state.currentCharacter].leHidden ? 'legs' : ""} 
-            style={{
-              pointerEvents: 'none', 
-              backgroundImage: `url(/api/images/${this.state.characters[this.state.currentCharacter].appliedLegs.name})`, 
-              backgroundSize: `${this.state.characters[this.state.currentCharacter].boSliderValue}px 515px`}}>
 
+        <div className="createComics" style={this.state.level == 'createComics' ? {display: 'block'} : {display: 'none'}}>
+          <div style={{top: '-7px', left: '-85px', position: 'absolute'}}>
+            {this.listChars()}
           </div>
-          <div 
-            className={!this.state.characters[this.state.currentCharacter].haHidden ? 'hands' : ""} 
-            style={{
-              pointerEvents: 'none', 
-              backgroundImage: `url(/api/images/${this.state.characters[this.state.currentCharacter].appliedHands.name})`, 
-              backgroundSize: `${this.state.characters[this.state.currentCharacter].boSliderValue}px 515px`}}>
-
+          {this.createBackgroundsDropdown()}
+          <div style={{backgroundColor: 'rgba(255,255,255,0)', width: '980px', height: '570px', margin: '10px', overflow: 'hidden'}}>
+            <Draggable handle=".drag"
+             
+              {...dragHandlers}>
+                {this.createBodyContainer()}
+            </Draggable>
           </div>
-          <div 
-            className={!this.state.heHidden ? 'head' : ""} 
-            style={{
-              pointerEvents: 'none', 
-              backgroundImage: `url(/api/images/${this.state.characters[this.state.currentCharacter].appliedHeads.name})`}}>
-
-          </div>
-          <div 
-            className='mask' 
-            style={{
-              pointerEvents: 'none', 
-              backgroundImage: `url(/api/images/${this.state.characters[this.state.currentCharacter].appliedMasks.name})`}}>
-
-          </div>
-          <div 
-            className='hair' 
-            style={{
-              pointerEvents: 'none', 
-              backgroundImage: `url(/api/images/${this.state.characters[this.state.currentCharacter].appliedHair.name})`}}>
-
-          </div>
-          <div 
-            className={!this.state.characters[this.state.currentCharacter].eyHidden ? 'eyes' : ""} 
-            style={{
-              pointerEvents: 'none', 
-              backgroundImage: `url(/api/images/${this.state.characters[this.state.currentCharacter].appliedEyes.name})`, 
-              top: `${this.state.characters[this.state.currentCharacter].eySliderValue}px`}}>
-
-          </div>
-          <div 
-            className={!this.state.characters[this.state.currentCharacter].moHidden ? 'mouth' : ""} 
-            style={{
-              pointerEvents: 'none',
-              backgroundImage: `url(/api/images/${this.state.characters[this.state.currentCharacter].appliedMouths.name})`, 
-              top: `${this.state.characters[this.state.currentCharacter].moSliderValue}px`}}>
-
-          </div>
-          <div 
-            className='brows' 
-            style={{
-              pointerEvents: 'none', 
-              backgroundImage: `url(/api/images/${this.state.characters[this.state.currentCharacter].appliedBrows.name})`, 
-              top: `${this.state.characters[this.state.currentCharacter].brSliderValue}px`}}>
-
-          </div>
-          <div 
-            className='hat' 
-            style={{
-              pointerEvents: 'none', 
-              backgroundImage: `url(/api/images/${this.state.characters[this.state.currentCharacter].appliedHats.name})`}}>
-
-          </div>
-          <div 
-            className='beard' 
-            style={{
-              pointerEvents: 'none', 
-              backgroundImage: `url(/api/images/${this.state.characters[this.state.currentCharacter].appliedBeard.name})`}}>
-
-          </div>
-          <div 
-            className='boobs' 
-            style={{
-              pointerEvents: 'none', 
-              backgroundImage: `url(/api/images/${this.state.characters[this.state.currentCharacter].appliedBoobs.name})`}}>
-
-          </div>
-          <div 
-            className='glasses' 
-            style={{
-              pointerEvents: 'none', 
-              backgroundImage: `url(/api/images/${this.state.characters[this.state.currentCharacter].appliedGlasses.name})`}}>
-
-          </div>
-        </div>
-        <div className={!this.state.formData.text ? "" : 'pointer'} style={{pointerEvents: 'none'}}>
-
-        </div>
-        <div 
-          className='characterText' 
-          ref='text' 
-          style={this.state.backgrounds[this.state.backgrCount].name == 'Backgr2' || this.state.backgrounds[this.state.backgrCount].name == 'Backgr5' ? {
-            top: `${100-this.state.textHeight}px`, 
-            color: 'white', 
-            fontSize: '18px'
-          }:{
-            top: `${100-this.state.textHeight}px`, 
-            color: 'black', 
-            fontSize: '18px'
-          }}
-        >
-          {this.state.formData.text}
-        </div>
-        <input 
+          <input 
           maxLength='100' 
           ref="field" 
           onChange={this.handleChange} 
@@ -972,158 +1068,224 @@ class Game extends React.Component {
           type="text" 
           placeholder="Реплика персонажа" 
         />
-        
-
-        <button className='chooseBkgrButton' onClick={this.setDefaultBody} style={{zIndex: '7', position: 'absolute', top: '19px', left: '100px', fontSize: '12px', padding: '3px', height: 'auto', width: '140px'}}>Вернуть все в зад</button>
-        <button className='chooseBkgrButton' onClick={this.newCharacter} style={{zIndex: '7', position: 'absolute', top: '44px', left: '100px', fontSize: '12px', padding: '3px', height: 'auto', width: '140px'}}>Добавить персонажа</button>
-        <button className='chooseBkgrButton' onClick={this.deleteCharacter} style={{zIndex: '7', position: 'absolute', top: '69px', left: '100px', fontSize: '12px', padding: '3px', height: 'auto', width: '140px'}}>Удалить персонажа</button>
-        <button className='chooseBkgrButton' onClick={this.setMishanya} style={{zIndex: '7', position: 'absolute', top: '94px', left: '100px', fontSize: '12px', padding: '3px', height: 'auto', width: '140px'}}>Щелк</button>
-        
-        <div  className="controlPanel" onClick={this.closeBgDropdown}>
+            
+          <button style={{position: 'absolute', bottom: '10px'}} onClick={() => this.changeLevel('createCharacter')}>Назад к редактору персонажа</button>
           
-          <div>
-            <div className="charsList">
-              {this.listChars()}
-            </div>
-            <div className="dropdown">
-              <button  
-                onClick={this.toggleDropdown} 
-                className="dropbtn">{this.state.dropdownBtnText}&nbsp;&nbsp; &nbsp;&nbsp; 
-                 <span style={{fontSize: '16px', fontWeight: '600'}}>V</span>
-              </button>
-              <div id="myDropdown" className={` ${this.state.showDropdown ? 'openDropdown' : 'hideDropdown'}`}>
-                <a href="#"
-                  onClick={this.switchControlPanelTab}
-                  name='Морда лица'
-                >Морда лица</a>
-                <a href="#"
-                  onClick={this.switchControlPanelTab}
-                  name='Конечности и тушка'
-                >Конечности и тушка</a>
-                <a href="#"
-                  onClick={this.switchControlPanelTab}
-                  name='Шмот'
-                >Шмот</a>
-                <a href="#"
-                  onClick={this.switchControlPanelTab}
-                  name='Волосы'
-                >Волосы</a>
-                <a href="#"
-                  onClick={this.switchControlPanelTab}
-                  name='Всякое'
-                >Всякое</a>
-              </div>
-            </div>
-          </div>
+        </div>
 
-          <div className='scrollbox'>
-            <div className={this.state.showDropdown ? 'openShade' : 'closeShade'} onClick={this.closeDropdown}>
+
+
+
+        <div className="createCharacter" style={this.state.level == 'createCharacter' ? {display: 'block'} : {display: 'none'}}>
+          {this.createBackgroundsDropdown()}
+          
+          <div className='back' 
+            onClick={this.closeDropdown} 
+            style={{pointerEvents: 'none', backgroundImage: `url(/api/images/${this.state.addBkgr})`}}
+          >
+          </div>
+          {this.createBodyContainer()}
+          <div className={!this.state.formData.text ? "" : 'pointer'} style={{pointerEvents: 'none'}}>
+
+          </div>
+          <div 
+            className='characterText' 
+            ref='text' 
+            style={this.state.backgrounds[this.state.backgrCount].name == 'Backgr2' || this.state.backgrounds[this.state.backgrCount].name == 'Backgr5' ? {
+              top: `${100-this.state.textHeight}px`, 
+              color: 'white', 
+              fontSize: '18px'
+            }:{
+              top: `${100-this.state.textHeight}px`, 
+              color: 'black', 
+              fontSize: '18px'
+            }}
+          >
+            {this.state.formData.text}
+          </div>
+        
+          
+
+          <button className='chooseBkgrButton' 
+            onClick={this.setDefaultBody} 
+            style={{zIndex: '7', position: 'absolute', top: '19px', left: '15px', fontSize: '12px', padding: '3px', height: 'auto', width: '140px'}}>
+              Вернуть все в зад
+          </button>
+          <button 
+            className='chooseBkgrButton' 
+            onClick={this.newCharacter} 
+            style={{zIndex: '7', position: 'absolute', top: '44px', left: '15px', fontSize: '12px', padding: '3px', height: 'auto', width: '140px'}}>
+              Добавить персонажа
+          </button>
+          <button 
+            className='chooseBkgrButton' 
+            onClick={this.deleteCharacter} 
+            style={{zIndex: '7', position: 'absolute', top: '69px', left: '15px', fontSize: '12px', padding: '3px', height: 'auto', width: '140px'}}>
+              Удалить персонажа
+          </button>
+          <button 
+            className='chooseBkgrButton' 
+            onClick={this.setMishanya} 
+            style={{zIndex: '7', position: 'absolute', top: '94px', left: '15px', fontSize: '12px', padding: '3px', height: 'auto', width: '140px'}}>
+              Щелк
+          </button>
+
+
+          
+          <div  className="controlPanel" onClick={this.closeBgDropdown}>
+            
+            <div>
+              <div className="charsList">
+                {this.listChars()}
+              </div>
+
+              <button 
+                className='chooseBkgrButton' 
+                onClick={() => this.changeLevel('createComics')} 
+                style={{zIndex: 999, position: 'absolute', bottom: '-5px', left: '-655px'}}>
+                  Перейти к созданию комикса
+              </button>
+
+              <div className="dropdown">
+                <button  
+                  onClick={this.toggleDropdown} 
+                  className="dropbtn">{this.state.dropdownBtnText}&nbsp;&nbsp; &nbsp;&nbsp; 
+                  <span style={{fontSize: '16px', fontWeight: '600'}}>V</span>
+                </button>
+                <div id="myDropdown" className={` ${this.state.showDropdown ? 'openDropdown' : 'hideDropdown'}`}>
+                  <a href="#"
+                    onClick={this.switchControlPanelTab}
+                    name='Морда лица'
+                  >Морда лица</a>
+                  <a href="#"
+                    onClick={this.switchControlPanelTab}
+                    name='Конечности и тушка'
+                  >Конечности и тушка</a>
+                  <a href="#"
+                    onClick={this.switchControlPanelTab}
+                    name='Шмот'
+                  >Шмот</a>
+                  <a href="#"
+                    onClick={this.switchControlPanelTab}
+                    name='Волосы'
+                  >Волосы</a>
+                  <a href="#"
+                    onClick={this.switchControlPanelTab}
+                    name='Всякое'
+                  >Всякое</a>
+                </div>
+              </div>
             </div>
-            <div className={this.state.dropdownBtnText === 'Морда лица' ? 'showTab' : 'hideTab'}>
-              <div className="faceBtns" >
-                <button
-                  onClick={this.switchFaceTab}
-                  className={this.state.faceButtonsText === 'Глаза' ? "extradropbtnActive" : "extradropbtn"} 
-                  name="Глаза">
-                  Глаза
-                </button>
-                <button
-                  onClick={this.switchFaceTab}
-                  className={this.state.faceButtonsText === 'Рот' ? "extradropbtnActive" : "extradropbtn"} 
-                  name="Рот">
-                  Рот
-                </button>
-                <button
-                  onClick={this.switchFaceTab}
-                  className={this.state.faceButtonsText === 'Брови' ? "extradropbtnActive" : "extradropbtn"} 
-                  name="Брови">
-                  Брови
-                </button>
-              </div >
-              <div className={this.state.faceButtonsText === 'Глаза' ? 'showTab ' : 'hideTab'}>
-                <div className="sliderContainer">
-                  <h1>Положение глаз</h1>
-                  <input
-                  type="range"
-                  min="-15"
-                  max="15"
-                  className="slider"
-                  value={this.state.characters[this.state.currentCharacter].eySliderValue}
-                  id="eySliderValue"
-                  step="5"
-                  onChange={this.handleSliderChange} />
-                </div>
-                {this.setEyesButtons()}
+
+            <div className='scrollbox'>
+              <div className={this.state.showDropdown ? 'openShade' : 'closeShade'} onClick={this.closeDropdown}>
               </div>
-              <div className={this.state.faceButtonsText === 'Рот' ? 'showTab' : 'hideTab'}>
-                <div className="sliderContainer">
-                  <h1>Положение рта</h1>
-                  <input
-                  type="range"
-                  min="-15"
-                  max="15"
-                  className="slider"
-                  value={this.state.characters[this.state.currentCharacter].moSliderValue}
-                  id="moSliderValue"
-                  step="5"
-                  onChange={this.handleSliderChange} />
-                </div>
-                {this.setMouthButtons()}
-              </div>
-              <div className={` ${this.state.faceButtonsText === 'Брови' ? 'showTab' : 'hideTab'}`}>
-                <div className="sliderContainer">
-                  <h1>Положение бровей</h1>
-                  <input
+              <div className={this.state.dropdownBtnText === 'Морда лица' ? 'showTab' : 'hideTab'}>
+                <div className="faceBtns" >
+                  <button
+                    onClick={this.switchFaceTab}
+                    className={this.state.faceButtonsText === 'Глаза' ? "extradropbtnActive" : "extradropbtn"} 
+                    name="Глаза">
+                    Глаза
+                  </button>
+                  <button
+                    onClick={this.switchFaceTab}
+                    className={this.state.faceButtonsText === 'Рот' ? "extradropbtnActive" : "extradropbtn"} 
+                    name="Рот">
+                    Рот
+                  </button>
+                  <button
+                    onClick={this.switchFaceTab}
+                    className={this.state.faceButtonsText === 'Брови' ? "extradropbtnActive" : "extradropbtn"} 
+                    name="Брови">
+                    Брови
+                  </button>
+                </div >
+                <div className={this.state.faceButtonsText === 'Глаза' ? 'showTab ' : 'hideTab'}>
+                  <div className="sliderContainer">
+                    <h1>Положение глаз</h1>
+                    <input
                     type="range"
                     min="-15"
                     max="15"
                     className="slider"
-                    value={this.state.characters[this.state.currentCharacter].brSliderValue}
-                    id="brSliderValue"
+                    value={this.state.characters[this.state.currentCharacter].eySliderValue}
+                    id="eySliderValue"
+                    step="5"
+                    onChange={this.handleSliderChange} />
+                  </div>
+                  {this.setEyesButtons()}
+                </div>
+                <div className={this.state.faceButtonsText === 'Рот' ? 'showTab' : 'hideTab'}>
+                  <div className="sliderContainer">
+                    <h1>Положение рта</h1>
+                    <input
+                    type="range"
+                    min="-15"
+                    max="15"
+                    className="slider"
+                    value={this.state.characters[this.state.currentCharacter].moSliderValue}
+                    id="moSliderValue"
+                    step="5"
+                    onChange={this.handleSliderChange} />
+                  </div>
+                  {this.setMouthButtons()}
+                </div>
+                <div className={` ${this.state.faceButtonsText === 'Брови' ? 'showTab' : 'hideTab'}`}>
+                  <div className="sliderContainer">
+                    <h1>Положение бровей</h1>
+                    <input
+                      type="range"
+                      min="-15"
+                      max="15"
+                      className="slider"
+                      value={this.state.characters[this.state.currentCharacter].brSliderValue}
+                      id="brSliderValue"
+                      step="5"
+                      onChange={this.handleSliderChange} 
+                    />
+                  </div>
+                  {this.setBrowsButtons()}
+                </div>
+              </div>
+              <div className={` ${this.state.dropdownBtnText === 'Конечности и тушка' ? 'showTab' : 'hideTab'}`}>
+                <div className="sliderContainer">
+                  <h1>Размер тушки</h1>
+                  <input
+                    type="range"
+                    min="350"
+                    max="450"
+                    className="slider"
+                    value={this.state.characters[this.state.currentCharacter].boSliderValue}
+                    id="boSliderValue"
                     step="5"
                     onChange={this.handleSliderChange} 
                   />
                 </div>
-                {this.setBrowsButtons()}
+                <br />
+                <h1>Руки</h1>
+                {this.setHandsButtons()}
+                <h1>Ноги</h1>
+                {this.setLegsButtons()}
+                <h1>Сиськи!</h1>
+                {this.setBoobsButtons()}
               </div>
-            </div>
-            <div className={` ${this.state.dropdownBtnText === 'Конечности и тушка' ? 'showTab' : 'hideTab'}`}>
-              <div className="sliderContainer">
-                <h1>Размер тушки</h1>
-                <input
-                  type="range"
-                  min="350"
-                  max="450"
-                  className="slider"
-                  value={this.state.characters[this.state.currentCharacter].boSliderValue}
-                  id="boSliderValue"
-                  step="5"
-                  onChange={this.handleSliderChange} 
-                />
+              <div className={` ${this.state.dropdownBtnText === 'Шмот' ? 'showTab' : 'hideTab'}`}>
+                {this.setClothesButtons()}
               </div>
-              <br />
-              <h1>Руки</h1>
-              {this.setHandsButtons()}
-              <h1>Ноги</h1>
-              {this.setLegsButtons()}
-              <h1>Сиськи!</h1>
-              {this.setBoobsButtons()}
-            </div>
-            <div className={` ${this.state.dropdownBtnText === 'Шмот' ? 'showTab' : 'hideTab'}`}>
-              {this.setClothesButtons()}
-            </div>
-            <div className={` ${this.state.dropdownBtnText === 'Волосы' ? 'showTab' : 'hideTab'}`}>
-              {this.setHairButtons()}
-            </div>
-            <div className={` ${this.state.dropdownBtnText === 'Всякое' ? 'showTab' : 'hideTab'}`}>
-              <h1>Растительность</h1>
-              {this.setBeardButtons()}
-              <h1>Очки</h1>
-              {this.setGlassesButtons()}
-              <h1>Головные уборы</h1>
-              {this.setHatsButtons()}
-              <h1>Маски</h1>
-              {this.setMasksButtons()}
+              <div className={` ${this.state.dropdownBtnText === 'Волосы' ? 'showTab' : 'hideTab'}`}>
+                {this.setHairButtons()}
+              </div>
+              <div className={` ${this.state.dropdownBtnText === 'Всякое' ? 'showTab' : 'hideTab'}`}>
+                <h1>Растительность</h1>
+                {this.setBeardButtons()}
+                <h1>Очки</h1>
+                {this.setGlassesButtons()}
+                <h1>Головные уборы</h1>
+                {this.setHatsButtons()}
+                <h1>Маски</h1>
+                {this.setMasksButtons()}
+              </div>
             </div>
           </div>
         </div>

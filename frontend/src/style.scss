@@ -579,8 +579,8 @@ body{
 
 .charsList {
   position: absolute;
-  top: -24px;
-  left: -660px;
+  top: -42px;
+  left: -760px;
 }
 
 .scrollbox {
@@ -613,4 +613,20 @@ body{
   background: -webkit-linear-gradient(top, rgba(255, 255, 255, 0), #FFF 70%, #FFF);
   background: -moz-linear-gradient(top, rgba(255, 255, 255, 0), #FFF 70%, #FFF);
   background: linear-gradient(to bottom, rgba(255, 255, 255, 0), #FFF 70%, #FFF);
+}
+
+#mydiv {
+  position: absolute;
+  z-index: 9;
+  background-color: #f1f1f1;
+  border: 1px solid #d3d3d3;
+  text-align: center;
+}
+
+#mydivheader {
+  padding: 10px;
+  cursor: move;
+  z-index: 10;
+  background-color: #2196F3;
+  color: #fff;
 }
