@@ -3,6 +3,20 @@ import axios from 'axios'
 import htmlToImage from 'html-to-image'
 import {newCharact, mishanya, defaultCharacter} from '../components/common/characters'
 import Draggable from 'react-draggable';
+import {setEyesButtons,
+        setBrowsButtons,
+        setMouthButtons,
+        setHandsButtons,
+        setLegsButtons,
+        setBoobsButtons,
+        setClothesButtons,
+        setHairButtons,
+        setBeardButtons,
+        setGlassesButtons,
+        setHatsButtons,
+        setMasksButtons,} from '../components/common/buttons'
+
+import {createBodyContainer } from '../components/common/editorBodyContainer'
 
 
 class Game extends React.Component {
@@ -72,22 +86,9 @@ class Game extends React.Component {
     this.closeBgDropdown = this.closeBgDropdown.bind(this)
     this.switchControlPanelTab = this.switchControlPanelTab.bind(this)
     this.switchFaceTab = this.switchFaceTab.bind(this)
-    this.setEyesButtons = this.setEyesButtons.bind(this)
-    this.setBrowsButtons = this.setBrowsButtons.bind(this)
-    this.setMouthButtons = this.setMouthButtons.bind(this)
-    this.setHandsButtons = this.setHandsButtons.bind(this)
-    this.setLegsButtons = this.setLegsButtons.bind(this)
-    this.setBoobsButtons = this.setBoobsButtons.bind(this)
-    this.setClothesButtons = this.setClothesButtons.bind(this)
-    this.setHairButtons = this.setHairButtons.bind(this)
-    this.setBeardButtons = this.setBeardButtons.bind(this)
-    this.setGlassesButtons = this.setGlassesButtons.bind(this)
-    this.setHatsButtons = this.setHatsButtons.bind(this)
-    this.setMasksButtons = this.setMasksButtons.bind(this)
     this.handleChange = this.handleChange.bind(this)
     this.applyBodyPart = this.applyBodyPart.bind(this)
     this.handleSliderChange = this.handleSliderChange.bind(this)
-    this.sortBodyImages = this.sortBodyImages.bind(this)
     this.setDefaultBody = this.setDefaultBody.bind(this)
     this.resetPart = this.resetPart.bind(this)
     this.setBackgroundDropdown = this.setBackgroundDropdown.bind(this)
@@ -105,6 +106,9 @@ class Game extends React.Component {
     this.adjustYPos = this.adjustYPos.bind(this)
     this.onControlledDrag = this.onControlledDrag.bind(this)
     this.onControlledDragStop = this.onControlledDragStop.bind(this)
+    this.setFirstScene = this.setFirstScene.bind(this)
+    this.sortBodyImages = this.sortBodyImages.bind(this)
+
    
   }
 
@@ -234,6 +238,11 @@ class Game extends React.Component {
         }
       }
 
+    })
+  }
+  sortBodyImages(array) {
+    array.sort((a, b) => {
+      return +(a.name.replace(/[^0-9]/g, '')) - +(b.name.replace(/[^0-9]/g, ''))
     })
   }
 
@@ -369,332 +378,7 @@ class Game extends React.Component {
     })
   }
 
-  sortBodyImages(array) {
-    array.sort((a, b) => {
-      return +(a.name.replace(/[^0-9]/g, '')) - +(b.name.replace(/[^0-9]/g, ''))
-    })
-  }
-
-  setEyesButtons() {
-    let images = this.state.eyes
-    this.sortBodyImages(images)
-
-    return(
-      <div className='buttonsContainer '>
-        {images.map(image =>
-          <div
-          key={image.id}
-          style={{backgroundImage: `url(/api/images/${image.name})`}}
-          className='eyesButton'
-          id={image.name}
-          onClick={this.applyBodyPart}
-          name='appliedEyes'>
-
-          </div>
-        )}
-      </div>
-    )
-  }
-
-  setBrowsButtons() {
-    const images = this.state.brows
-    this.sortBodyImages(images)
-
-    return(
-      <div className='buttonsContainer'>
-        <div
-          className='browsButton'
-          onClick={this.resetPart}
-          id='appliedBrows'style={{fontSize: '35px'}}>
-          X
-        </div>
-        {images.map(image =>
-          <div
-          key={image.id}
-          id={image.name}
-          style={{backgroundImage: `url(/api/images/${image.name})`}}
-          className='browsButton'
-          onClick={this.applyBodyPart}
-          name='appliedBrows'>
-
-          </div>
-        )}
-      </div>
-    )
-  }
-
-  setMouthButtons() {
-    const images = this.state.mouths
-    this.sortBodyImages(images)
-
-    return(
-      <div className='buttonsContainer'>
-        {images.map(image =>
-          <div
-          key={image.id}
-          id={image.name}
-          style={{backgroundImage: `url(/api/images/${image.name})`}}
-          className='mouthButton'
-          onClick={this.applyBodyPart}
-          name='appliedMouths'>
-
-          </div>
-        )}
-      </div>
-    )
-  }
-
-  setHandsButtons() {
-    const images = this.state.hands
-    this.sortBodyImages(images)
-
-    return(
-      <div className='buttonsContainer'>
-        {images.map(image =>
-          <div
-          key={image.id}
-          id={image.name}
-          style={{backgroundImage: `url(/api/images/${image.name}), url(/api/images/Head1.png), url(/api/images/Body.png)`}}
-          className='handsButton'
-          onClick={this.applyBodyPart}
-          name='appliedHands'>
-
-          </div>
-        )}
-      </div>
-    )
-  }
-
-  setLegsButtons() {
-    const images = this.state.legs
-    this.sortBodyImages(images)
-
-    return(
-      <div className='buttonsContainer'>
-        {images.map(image =>
-          <div
-          key={image.id}
-          id={image.name}
-          style={{backgroundImage: `url(/api/images/${image.name}), url(/api/images/Head1.png), url(/api/images/Body.png)`}}
-          className='legsButton'
-          onClick={this.applyBodyPart}
-          name='appliedLegs'>
-
-          </div>
-        )}
-      </div>
-    )
-  }
-
-  setBoobsButtons() {
-    const images = this.state.boobs
-    this.sortBodyImages(images)
-
-    return(
-      <div className='buttonsContainer'>
-        <div
-          className='boobsButton'
-          onClick={this.resetPart}
-          id='appliedBoobs'
-          style={{fontSize: '35px'}}>
-          X
-        </div>
-        {images.map(image =>
-          <div
-          key={image.id}
-          id={image.name}
-          style={{backgroundImage: `url(/api/images/${image.name}), url(/api/images/Head1.png), url(/api/images/Body.png)`}}
-          className='boobsButton'
-          onClick={this.applyBodyPart}
-          name='appliedBoobs'>
-
-          </div>
-        )}
-      </div>
-    )
-  }
-
-  setClothesButtons() {
-    const images = this.state.clothes
-    this.sortBodyImages(images)
-
-    return(
-      <div className='buttonsContainer'>
-        <div
-          className='boobsButton'
-          onClick={this.applyBodyPart}
-          id='Body'
-          className='clothesButton'
-          name='appliedClothes'
-          style={{backgroundImage: `url(/api/images/Head1.png), url(/api/images/Hands1.png), url(/api/images/Body), url(/api/images/Legs2_0.png)`}}>
-          
-        </div>
-        {images.map(image =>
-          <div
-          key={image.id}
-          id={image.name}
-          style={ image.name === 'Clothes_15' || 
-                  image.name === 'Clothes_36' ||
-                  image.name === 'Clothes_37' ||
-                  image.name === 'Clothes_38' ||
-                  image.name === 'Clothes_39' ||
-                  image.name === 'Clothes_40' ||
-                  image.name === 'Clothes_41' ||
-                  image.name === 'Clothes_42' ||
-                  image.name === 'Clothes_43' ||
-                  image.name === 'Clothes_44' ||
-                  image.name === 'Clothes_78' ? 
-                  {backgroundImage: `url(/api/images/Head1.png), url(/api/images/${image.name}), url(/api/images/Legs2_0.png)`} 
-                  : {backgroundImage: `url(/api/images/Head1.png), url(/api/images/Hands1.png), url(/api/images/${image.name}), url(/api/images/Legs2_0.png)`
-                }}
-          className='clothesButton'
-          onClick={this.applyBodyPart}
-          name='appliedClothes'>
-
-          </div>
-        )}
-      </div>
-    )
-  }
-
-  setHairButtons() {
-    const images = this.state.hair
-    this.sortBodyImages(images)
-
-    return(
-      <div className='buttonsContainer'>
-        <div
-          className='hairButton'
-          onClick={this.resetPart}
-          id='appliedHair'
-          style={{fontSize: '35px'}}>
-          X
-        </div>
-        {images.map(image =>
-          <div
-          key={image.id}
-          id={image.name}
-          style={{backgroundImage: `url(/api/images/${image.name}), url(/api/images/Head1.png)`}}
-          className='hairButton'
-          onClick={this.applyBodyPart}
-          name='appliedHair'>
-
-          </div>
-        )}
-      </div>
-    )
-  }
-
-  setBeardButtons() {
-    const images = this.state.beards
-    this.sortBodyImages(images)
-
-    return(
-      <div className='buttonsContainer'>
-        <div
-          className='hairButton'
-          onClick={this.resetPart}
-          id='appliedBeard'
-          style={{fontSize: '35px'}}>
-          X
-        </div>
-        {images.map(image =>
-          <div
-          key={image.id}
-          id={image.name}
-          style={{backgroundImage: `url(/api/images/${image.name}), url(/api/images/Head1.png)`}}
-          className='hairButton'
-          onClick={this.applyBodyPart}
-          name='appliedBeard'>
-
-          </div>
-        )}
-      </div>
-    )
-  }
-  setGlassesButtons() {
-    const images = this.state.glasses
-    this.sortBodyImages(images)
-
-    return(
-      <div className='buttonsContainer'>
-        <div
-          className='hairButton'
-          onClick={this.resetPart}
-          id='appliedGlasses'
-          style={{fontSize: '35px'}}>
-          X
-        </div>
-        {images.map(image =>
-          <div
-          key={image.id}
-          id={image.name}
-          style={{backgroundImage: `url(/api/images/${image.name}), url(/api/images/Head1.png)`}}
-          className='hairButton'
-          onClick={this.applyBodyPart}
-          name='appliedGlasses'>
-
-          </div>
-        )}
-      </div>
-    )
-  }
-
-  setHatsButtons() {
-    const images = this.state.hats
-    this.sortBodyImages(images)
-
-    return(
-      <div className='buttonsContainer'>
-        <div
-          className='hairButton'
-          onClick={this.resetPart}
-          id='appliedHats'
-          style={{fontSize: '35px'}}>
-          X
-        </div>
-        {images.map(image =>
-          <div
-          key={image.id}
-          id={image.name}
-          style={{backgroundImage: `url(/api/images/${image.name}), url(/api/images/Head1.png)`}}
-          className='hairButton'
-          onClick={this.applyBodyPart}
-          name='appliedHats'>
-
-          </div>
-        )}
-      </div>
-    )
-  }
-  setMasksButtons() {
-    const images = this.state.masks
-    this.sortBodyImages(images)
-
-    return(
-      <div className='buttonsContainer'>
-        <div
-          className='hairButton'
-          onClick={this.resetPart}
-          id='appliedMasks'
-          style={{fontSize: '35px'}}>
-          X
-        </div>
-        {images.map(image =>
-          <div
-          key={image.id}
-          id={image.name}
-          style={{backgroundImage: `url(/api/images/${image.name}), url(/api/images/Head1.png)`}}
-          className='hairButton'
-          onClick={this.applyBodyPart}
-          name='appliedMasks'>
-
-          </div>
-        )}
-      </div>
-    )
-  }
-
+  
   // character text coming from form
   handleChange(e) {
     let formData = { ...this.state.formData, [e.target.name]: e.target.value }
@@ -806,8 +490,8 @@ class Game extends React.Component {
   setFirstScene() {
     const firstScene = {
       [this.uuidv4]: {
-        backgrounds: [],
-        characters: {},
+        background: this.state.backgrounds[this.state.backgrCount],
+        characters: '',
       }
     }
   }
@@ -843,111 +527,7 @@ class Game extends React.Component {
     )
   }
 
-  createBodyContainer() {
-    return (
-      <div className="bodyContainer" onClick={this.closeDropdown}>
-            <div 
-              className='clothes' 
-              style={{
-                pointerEvents: 'none', 
-                backgroundImage: `url(/api/images/${this.state.characters[this.state.currentCharacter].appliedClothes.name})`, 
-                zIndex: this.state.characters[this.state.currentCharacter].clZindex, 
-                backgroundSize: `${this.state.characters[this.state.currentCharacter].boSliderValue}px 515px`}}
-              >
-            </div>
-            <div 
-              className={!this.state.characters[this.state.currentCharacter].leHidden ? 'legs' : ""} 
-              style={{
-                pointerEvents: 'none', 
-                backgroundImage: `url(/api/images/${this.state.characters[this.state.currentCharacter].appliedLegs.name})`, 
-                backgroundSize: `${this.state.characters[this.state.currentCharacter].boSliderValue}px 515px`}}>
-
-            </div>
-            <div 
-              className={!this.state.characters[this.state.currentCharacter].haHidden ? 'hands' : ""} 
-              style={{
-                pointerEvents: 'none', 
-                backgroundImage: `url(/api/images/${this.state.characters[this.state.currentCharacter].appliedHands.name})`, 
-                backgroundSize: `${this.state.characters[this.state.currentCharacter].boSliderValue}px 515px`}}>
-
-            </div>
-            <div 
-              className={!this.state.heHidden ? 'head' : ""} 
-              style={{
-                pointerEvents: 'none', 
-                backgroundImage: `url(/api/images/${this.state.characters[this.state.currentCharacter].appliedHeads.name})`}}>
-
-            </div>
-            <div 
-              className='mask' 
-              style={{
-                pointerEvents: 'none', 
-                backgroundImage: `url(/api/images/${this.state.characters[this.state.currentCharacter].appliedMasks.name})`}}>
-
-            </div>
-            <div 
-              className='hair' 
-              style={{
-                pointerEvents: 'none', 
-                backgroundImage: `url(/api/images/${this.state.characters[this.state.currentCharacter].appliedHair.name})`}}>
-
-            </div>
-            <div 
-              className={!this.state.characters[this.state.currentCharacter].eyHidden ? 'eyes' : ""} 
-              style={{
-                pointerEvents: 'none', 
-                backgroundImage: `url(/api/images/${this.state.characters[this.state.currentCharacter].appliedEyes.name})`, 
-                top: `${this.state.characters[this.state.currentCharacter].eySliderValue}px`}}>
-
-            </div>
-            <div 
-              className={!this.state.characters[this.state.currentCharacter].moHidden ? 'mouth' : ""} 
-              style={{
-                pointerEvents: 'none',
-                backgroundImage: `url(/api/images/${this.state.characters[this.state.currentCharacter].appliedMouths.name})`, 
-                top: `${this.state.characters[this.state.currentCharacter].moSliderValue}px`}}>
-
-            </div>
-            <div 
-              className='brows' 
-              style={{
-                pointerEvents: 'none', 
-                backgroundImage: `url(/api/images/${this.state.characters[this.state.currentCharacter].appliedBrows.name})`, 
-                top: `${this.state.characters[this.state.currentCharacter].brSliderValue}px`}}>
-
-            </div>
-            <div 
-              className='hat' 
-              style={{
-                pointerEvents: 'none', 
-                backgroundImage: `url(/api/images/${this.state.characters[this.state.currentCharacter].appliedHats.name})`}}>
-
-            </div>
-            <div 
-              className='beard' 
-              style={{
-                pointerEvents: 'none', 
-                backgroundImage: `url(/api/images/${this.state.characters[this.state.currentCharacter].appliedBeard.name})`}}>
-
-            </div>
-            <div 
-              className='boobs' 
-              style={{
-                pointerEvents: 'none', 
-                backgroundImage: `url(/api/images/${this.state.characters[this.state.currentCharacter].appliedBoobs.name})`}}>
-
-            </div>
-            <div 
-              className='glasses' 
-              style={{
-                pointerEvents: 'none', 
-                backgroundImage: `url(/api/images/${this.state.characters[this.state.currentCharacter].appliedGlasses.name})`}}>
-
-            </div>
-            <div className='drag' style={{backgroundColor: 'rgba(0,0,0,0)', width: '220px', height: '330px', position: 'absolute', top: '120px', left: '80px', zIndex: 99}}></div>
-          </div>
-    )
-  }
+  
 
   createBackgroundsDropdown() {
     return(
@@ -1020,16 +600,16 @@ class Game extends React.Component {
 
   render(){
     const dragHandlers = {onStart: this.onStart, onStop: this.onStop};
-    const {deltaPosition, controlledPosition} = this.state;
+    const {deltaPosition, controlledPosition, backgrCount, backgrounds, characters, currentCharacter, addBkgr, gameStart, level, formData, textHeight, dropdownBtnText, showBgDropdown, showDropdown, faceButtonsText, eyes, mouths, brows, legs, hands, boobs, hair, clothes, hats, beards, glasses, masks} = this.state;
 
-    if (!this.state.backgrounds[0] || !this.state.gameStart || this.state.characters === {}) {
+    if (!backgrounds[0] || !gameStart || characters === {}) {
       console.log()
       return (
         <div className="gamefield">
           <div className='splashscreen'>
             <h1 className="version">V2.0</h1>
-            <h1 style={this.state.backgrounds[0] ? {display: 'none'}:{display: 'block'}} className="splashtext">Loading...</h1>
-            <button style={this.state.backgrounds[0] ? {display: 'block'}:{display: 'none'}} onClick={this.startGame}className="startButton" >Жмяк</button>
+            <h1 style={backgrounds[0] ? {display: 'none'}:{display: 'block'}} className="splashtext">Loading...</h1>
+            <button style={backgrounds[0] ? {display: 'block'}:{display: 'none'}} onClick={this.startGame}className="startButton" >Жмяк</button>
           </div>
         </div>
       )
@@ -1042,12 +622,12 @@ class Game extends React.Component {
         className="gamefield" 
         style={{ 
           marginTop: '5px', 
-          backgroundImage: `url(/api/images/${this.state.backgrounds[this.state.backgrCount].name})`
+          backgroundImage: `url(/api/images/${backgrounds[backgrCount].name})`
         }}
       >
 
 
-        <div className="createComics" style={this.state.level == 'createComics' ? {display: 'block'} : {display: 'none'}}>
+        <div className="createComics" style={level == 'createComics' ? {display: 'block'} : {display: 'none'}}>
           <div style={{top: '-7px', left: '-85px', position: 'absolute'}}>
             {this.listChars()}
           </div>
@@ -1056,7 +636,7 @@ class Game extends React.Component {
             <Draggable handle=".drag"
              
               {...dragHandlers}>
-                {this.createBodyContainer()}
+                {createBodyContainer(characters, currentCharacter, this.closeBgDropdown)}
             </Draggable>
           </div>
           <input 
@@ -1076,32 +656,32 @@ class Game extends React.Component {
 
 
 
-        <div className="createCharacter" style={this.state.level == 'createCharacter' ? {display: 'block'} : {display: 'none'}}>
+        <div className="createCharacter" style={level == 'createCharacter' ? {display: 'block'} : {display: 'none'}}>
           {this.createBackgroundsDropdown()}
           
           <div className='back' 
             onClick={this.closeDropdown} 
-            style={{pointerEvents: 'none', backgroundImage: `url(/api/images/${this.state.addBkgr})`}}
+            style={{pointerEvents: 'none', backgroundImage: `url(/api/images/${addBkgr})`}}
           >
           </div>
-          {this.createBodyContainer()}
-          <div className={!this.state.formData.text ? "" : 'pointer'} style={{pointerEvents: 'none'}}>
+          {createBodyContainer(characters, currentCharacter, this.closeBgDropdown)}
+          <div className={!formData.text ? "" : 'pointer'} style={{pointerEvents: 'none'}}>
 
           </div>
           <div 
             className='characterText' 
             ref='text' 
-            style={this.state.backgrounds[this.state.backgrCount].name == 'Backgr2' || this.state.backgrounds[this.state.backgrCount].name == 'Backgr5' ? {
-              top: `${100-this.state.textHeight}px`, 
+            style={backgrounds[backgrCount].name == 'Backgr2' || backgrounds[backgrCount].name == 'Backgr5' ? {
+              top: `${100-textHeight}px`, 
               color: 'white', 
               fontSize: '18px'
             }:{
-              top: `${100-this.state.textHeight}px`, 
+              top: `${100-textHeight}px`, 
               color: 'black', 
               fontSize: '18px'
             }}
           >
-            {this.state.formData.text}
+            {formData.text}
           </div>
         
           
@@ -1149,10 +729,10 @@ class Game extends React.Component {
               <div className="dropdown">
                 <button  
                   onClick={this.toggleDropdown} 
-                  className="dropbtn">{this.state.dropdownBtnText}&nbsp;&nbsp; &nbsp;&nbsp; 
+                  className="dropbtn">{dropdownBtnText}&nbsp;&nbsp; &nbsp;&nbsp; 
                   <span style={{fontSize: '16px', fontWeight: '600'}}>V</span>
                 </button>
-                <div id="myDropdown" className={` ${this.state.showDropdown ? 'openDropdown' : 'hideDropdown'}`}>
+                <div id="myDropdown" className={` ${showDropdown ? 'openDropdown' : 'hideDropdown'}`}>
                   <a href="#"
                     onClick={this.switchControlPanelTab}
                     name='Морда лица'
@@ -1178,30 +758,30 @@ class Game extends React.Component {
             </div>
 
             <div className='scrollbox'>
-              <div className={this.state.showDropdown ? 'openShade' : 'closeShade'} onClick={this.closeDropdown}>
+              <div className={showDropdown ? 'openShade' : 'closeShade'} onClick={this.closeDropdown}>
               </div>
-              <div className={this.state.dropdownBtnText === 'Морда лица' ? 'showTab' : 'hideTab'}>
+              <div className={dropdownBtnText === 'Морда лица' ? 'showTab' : 'hideTab'}>
                 <div className="faceBtns" >
                   <button
                     onClick={this.switchFaceTab}
-                    className={this.state.faceButtonsText === 'Глаза' ? "extradropbtnActive" : "extradropbtn"} 
+                    className={faceButtonsText === 'Глаза' ? "extradropbtnActive" : "extradropbtn"} 
                     name="Глаза">
                     Глаза
                   </button>
                   <button
                     onClick={this.switchFaceTab}
-                    className={this.state.faceButtonsText === 'Рот' ? "extradropbtnActive" : "extradropbtn"} 
+                    className={faceButtonsText === 'Рот' ? "extradropbtnActive" : "extradropbtn"} 
                     name="Рот">
                     Рот
                   </button>
                   <button
                     onClick={this.switchFaceTab}
-                    className={this.state.faceButtonsText === 'Брови' ? "extradropbtnActive" : "extradropbtn"} 
+                    className={faceButtonsText === 'Брови' ? "extradropbtnActive" : "extradropbtn"} 
                     name="Брови">
                     Брови
                   </button>
                 </div >
-                <div className={this.state.faceButtonsText === 'Глаза' ? 'showTab ' : 'hideTab'}>
+                <div className={faceButtonsText === 'Глаза' ? 'showTab ' : 'hideTab'}>
                   <div className="sliderContainer">
                     <h1>Положение глаз</h1>
                     <input
@@ -1209,14 +789,14 @@ class Game extends React.Component {
                     min="-15"
                     max="15"
                     className="slider"
-                    value={this.state.characters[this.state.currentCharacter].eySliderValue}
+                    value={characters[currentCharacter].eySliderValue}
                     id="eySliderValue"
                     step="5"
                     onChange={this.handleSliderChange} />
                   </div>
-                  {this.setEyesButtons()}
+                  {setEyesButtons(eyes, this.applyBodyPart)}
                 </div>
-                <div className={this.state.faceButtonsText === 'Рот' ? 'showTab' : 'hideTab'}>
+                <div className={faceButtonsText === 'Рот' ? 'showTab' : 'hideTab'}>
                   <div className="sliderContainer">
                     <h1>Положение рта</h1>
                     <input
@@ -1224,14 +804,14 @@ class Game extends React.Component {
                     min="-15"
                     max="15"
                     className="slider"
-                    value={this.state.characters[this.state.currentCharacter].moSliderValue}
+                    value={characters[currentCharacter].moSliderValue}
                     id="moSliderValue"
                     step="5"
                     onChange={this.handleSliderChange} />
                   </div>
-                  {this.setMouthButtons()}
+                  {setMouthButtons(mouths, this.applyBodyPart)}
                 </div>
-                <div className={` ${this.state.faceButtonsText === 'Брови' ? 'showTab' : 'hideTab'}`}>
+                <div className={` ${faceButtonsText === 'Брови' ? 'showTab' : 'hideTab'}`}>
                   <div className="sliderContainer">
                     <h1>Положение бровей</h1>
                     <input
@@ -1239,16 +819,16 @@ class Game extends React.Component {
                       min="-15"
                       max="15"
                       className="slider"
-                      value={this.state.characters[this.state.currentCharacter].brSliderValue}
+                      value={characters[currentCharacter].brSliderValue}
                       id="brSliderValue"
                       step="5"
                       onChange={this.handleSliderChange} 
                     />
                   </div>
-                  {this.setBrowsButtons()}
+                  {setBrowsButtons(brows, this.resetPart, this.applyBodyPart)}
                 </div>
               </div>
-              <div className={` ${this.state.dropdownBtnText === 'Конечности и тушка' ? 'showTab' : 'hideTab'}`}>
+              <div className={` ${dropdownBtnText === 'Конечности и тушка' ? 'showTab' : 'hideTab'}`}>
                 <div className="sliderContainer">
                   <h1>Размер тушки</h1>
                   <input
@@ -1256,7 +836,7 @@ class Game extends React.Component {
                     min="350"
                     max="450"
                     className="slider"
-                    value={this.state.characters[this.state.currentCharacter].boSliderValue}
+                    value={characters[currentCharacter].boSliderValue}
                     id="boSliderValue"
                     step="5"
                     onChange={this.handleSliderChange} 
@@ -1264,27 +844,27 @@ class Game extends React.Component {
                 </div>
                 <br />
                 <h1>Руки</h1>
-                {this.setHandsButtons()}
+                {setHandsButtons(hands, this.applyBodyPart)}
                 <h1>Ноги</h1>
-                {this.setLegsButtons()}
+                {setLegsButtons(legs, this.applyBodyPart)}
                 <h1>Сиськи!</h1>
-                {this.setBoobsButtons()}
+                {setBoobsButtons(boobs, this.resetPart, this.applyBodyPart)}
               </div>
-              <div className={` ${this.state.dropdownBtnText === 'Шмот' ? 'showTab' : 'hideTab'}`}>
-                {this.setClothesButtons()}
+              <div className={` ${dropdownBtnText === 'Шмот' ? 'showTab' : 'hideTab'}`}>
+                {setClothesButtons(clothes, this.applyBodyPart)}
               </div>
-              <div className={` ${this.state.dropdownBtnText === 'Волосы' ? 'showTab' : 'hideTab'}`}>
-                {this.setHairButtons()}
+              <div className={` ${dropdownBtnText === 'Волосы' ? 'showTab' : 'hideTab'}`}>
+                {setHairButtons(hair, this.resetPart, this.applyBodyPart)}
               </div>
-              <div className={` ${this.state.dropdownBtnText === 'Всякое' ? 'showTab' : 'hideTab'}`}>
+              <div className={` ${dropdownBtnText === 'Всякое' ? 'showTab' : 'hideTab'}`}>
                 <h1>Растительность</h1>
-                {this.setBeardButtons()}
+                {setBeardButtons(beards, this.resetPart, this.applyBodyPart)}
                 <h1>Очки</h1>
-                {this.setGlassesButtons()}
+                {setGlassesButtons(glasses, this.resetPart, this.applyBodyPart)}
                 <h1>Головные уборы</h1>
-                {this.setHatsButtons()}
+                {setHatsButtons(hats, this.resetPart, this.applyBodyPart)}
                 <h1>Маски</h1>
-                {this.setMasksButtons()}
+                {setMasksButtons(masks, this.resetPart, this.applyBodyPart)}
               </div>
             </div>
           </div>
