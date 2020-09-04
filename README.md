@@ -26,6 +26,6 @@ Cynic Editor is a fullstack app based on web comic series ["Cynic Mansion"](http
 * Disqus
 
 
-##Functionality:
+## Functionality:
 
 ###
