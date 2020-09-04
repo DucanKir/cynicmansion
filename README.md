@@ -1,6 +1,6 @@
 # Cynic Editor
 
-## Description
+## Description:
 
 Cynic Editor is a fullstack app based on web comic series ["Cynic Mansion"](https://cynicmansion.ru/) where you can create your own caracters and comics. 
 
@@ -23,3 +23,9 @@ Cynic Editor is a fullstack app based on web comic series ["Cynic Mansion"](http
 * CSS
 * Bulma
 * Git
+* Disqus
+
+
+##Functionality:
+
+###
